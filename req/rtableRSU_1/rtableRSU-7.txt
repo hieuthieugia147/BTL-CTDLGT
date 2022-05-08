@@ -1,0 +1,5 @@
+id: 0 req:7 src:V6 req Timeinit6.0 des:R4 route:R4 p(ratio):0.0 tComp:1.050000000000001 tTrans:1.3939393939393945 tSer: 2.443939393939395 hop:0 npath:0 cWL:318.1818181818183 res:303.030303030303
+id: 1 req:7 src:V6 req Timeinit6.0 des:R1 route:R4 p(ratio):0.0 tComp:1.0500000000000005 tTrans:1.3939393939393947 tSer: 2.443939393939395 hop:1 npath:1 cWL:318.18181818181824 res:303.030303030303
+id: 2 req:7 src:V6 req Timeinit6.0 des:R3 route:R4 p(ratio):0.0 tComp:0.23002913972679562 tTrans:1.6729220122472708 tSer: 1.9029511519740665 hop:1 npath:1 cWL:0.0 res:303.030303030303
+id: 3 req:7 src:V6 req Timeinit6.0 des:R5 route:R4 p(ratio):0.0 tComp:0.42237852551108523 tTrans:1.9062060880810854 tSer: 2.3285846135921706 hop:1 npath:1 cWL:0.0 res:303.030303030303
+id: 4 req:7 src:V6 req Timeinit6.0 des:R7 route:R4 p(ratio):0.0 tComp:0.39699233476211815 tTrans:1.875417354217099 tSer: 2.2724096889792174 hop:1 npath:1 cWL:0.0 res:303.030303030303

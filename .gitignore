@@ -1,4 +1,4 @@
 /bin/
 /target/
-*.xlsx
-*.txt
+# *.xlsx
+# *.txt
