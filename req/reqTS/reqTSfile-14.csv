@@ -1,0 +1,3 @@
+SEP=,
+List reqTS
+id,srcNode,timeArrival,wl
