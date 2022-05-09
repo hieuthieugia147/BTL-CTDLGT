@@ -23,7 +23,7 @@ public class TrafficUtils {
 		int[] data = { 24, 30, 60, 200, 500 };
 		int DATA = 0;
 		// int[] fixedNode = { 6, 0, 5 };
-		int[] fixedNode = { 0 };
+		int[] fixedNode = { 1, 4, 3 };
 
 		int idReq = 1;
 		for (int n = 0; n < fixedNode.length; n++) {
@@ -31,11 +31,15 @@ public class TrafficUtils {
 			double reqTime = 0;
 			for (int i = 1; i <= Constants.NUM_REQ; i++) {
 				int wl = data[DATA];
-				if (idNode == 6) {wl = data[4];} else {wl = data[4];}
+				if (idNode == 6) {
+					wl = data[4];
+				} else {
+					wl = data[4];
+				}
 				// if (idNode == 6) {wl = data[3];} else {wl = data[3];}
 				reqPiority.add(new RequestBase(idReq, wl, topo.get(idNode), reqTime, false));
 				traff.write(idReq + "\t" + idNode + "\t" + reqTime + "\t" + wl + "\n");
-				reqTime += 1;	// == timeArrival
+				reqTime += 1; // == timeArrival
 				idReq++;
 			}
 		}

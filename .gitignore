@@ -1,5 +1,4 @@
-# /bin/
-# /target/
-# *.xlsx
-# *.txt
-# *.csv
+/bin/
+/target/
+*.xlsx
+*.txt

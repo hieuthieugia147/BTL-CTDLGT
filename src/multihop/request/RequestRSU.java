@@ -17,14 +17,14 @@ public class RequestRSU extends RequestVehicle {
 	public RequestRSU(RequestVehicle rv) {
 		//dWL = rv.getMovedData();
 		super(rv.getId(), rv.getMovedData(),rv.getSrcNode(),rv.getTimeInit(),rv.isDone(),rv.getDes(),rv.getRoute(),rv.getStart(),rv.getEnd());
-		this.wlRSU = rv.getMovedData();
+		//this.wlRSU = rv.getMovedData();
 	}
 	
 	public String toString() {
 		if(this.srcNodeRSU!=null) {
-			return "reqid= "+ this.id + "\twlRSU = " + this.wlRSU + " (p(ratio)=" + this.ratio + "\tsrcNodeRSU: " +  this.srcNodeRSU.getName() + "\tsrcNodeVehicle: " + this.srcNode.getName() + ")";
+			return "req"+ this.id + " (p(ratio)=" + this.ratio + "\tsrcNodeRSU: " +  this.srcNodeRSU.getName() + "\tsrcNodeVehicle: " + this.srcNode.getName() + ")";
 		}else {
-			return "Null: req"+ this.id + " (" + this.ratio + " " + this.srcNode.getName() + ")";
+			return "req"+ this.id + " (" + this.ratio + " " + this.srcNode.getName() + ")";
 		}
 	}
 

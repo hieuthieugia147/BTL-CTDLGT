@@ -21,19 +21,16 @@ public class NodeVehicle extends NodeBase {
 	double[] velo;
 	double[] phi;
 	double[] sign;
-	
+
 	double cWL = 0; // current workload
-	double aWL = 0; // assigned workload 
-	
-	
+	double aWL = 0; // assigned workload
+
 	Vector<Vector<NodeVehicle>> nodeNeighbor = new Vector<Vector<NodeVehicle>>();
 	Vector<Vector<NodeRSU>> nodeParent = new Vector<Vector<NodeRSU>>();
 
 	Queue<RequestVehicle> qReq = new PriorityQueue<RequestVehicle>();
 
 	List<RequestVehicle> doneReq = new ArrayList<RequestVehicle>();
-
-
 
 	public Boolean checkLK(NodeVehicle a, int i) {
 		double ax = a.getX()[i];
@@ -44,7 +41,7 @@ public class NodeVehicle extends NodeBase {
 		}
 		return false;
 	}
-	
+
 	public boolean checkLK(NodeVehicle a, int i, NodeRSU b) {
 		double ax = a.getX()[i];
 		double ay = a.getY()[i];
@@ -60,29 +57,13 @@ public class NodeVehicle extends NodeBase {
 	public String toString() {
 		return name + ": x= " + lat + " , y = " + lng;
 	}
-	
+
 	public Vector<Vector<NodeRSU>> getNodeParent() {
 		return nodeParent;
 	}
 
 	public void setNodeParent(Vector<Vector<NodeRSU>> nodeParent) {
 		this.nodeParent = nodeParent;
-	}
-
-	public double getaWL() {
-		return aWL;
-	}
-
-	public void setaWL(double aWL) {
-		this.aWL = aWL;
-	}
-
-	public double getcWL() {
-		return cWL;
-	}
-
-	public void setcWL(double cWL) {
-		this.cWL = cWL;
 	}
 
 	public Queue<RequestVehicle> getqReq() {
@@ -153,5 +134,20 @@ public class NodeVehicle extends NodeBase {
 		this.sign = sign;
 	}
 
+	public double getaWL() {
+		return aWL;
+	}
+
+	public void setaWL(double aWL) {
+		this.aWL = aWL;
+	}
+
+	public double getcWL() {
+		return cWL;
+	}
+
+	public void setcWL(double cWL) {
+		this.cWL = cWL;
+	}
 
 }

@@ -21,9 +21,9 @@ public abstract class NodeBase {
 		this.RANGE = range;
 		this.res = res;
 	}
-	// public abstract Boolean checkLK(NodeBase a, int i);
-	// public abstract Boolean checkLK(NodeBase a);
-
+//	public abstract Boolean checkLK(NodeBase a, int i);
+//	public abstract Boolean checkLK(NodeBase a);
+//	
 
 	public int getId() {
 		return id;

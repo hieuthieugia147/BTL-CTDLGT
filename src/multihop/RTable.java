@@ -138,7 +138,7 @@ public class RTable {
 	}
 	
 	public String toString() {
-		String rrtable = "id: " + id + " req:" + req.getId() + " src:" + req.getSrcNode().getName() + " req Timeinit: " +req.getTimeInit() + " des:" + des + " route:" + route + " p(ratio):" + ratio 
+		String rrtable = "id: " + id + " req:" + req.getId() + " src:" + req.getSrcNode().getName() + " des:" + des + " route:" + route + " p(ratio):" + ratio 
 				+ " tComp:" + timeCompute + " tTrans:" + timeTrans + " tSer: " + (timeCompute+timeTrans)
 				+ " hop:" + hop + " npath:" + npath 
 				+ " cWL:" + cWL

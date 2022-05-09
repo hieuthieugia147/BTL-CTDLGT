@@ -80,7 +80,8 @@ public class RequestBase implements Comparable<RequestBase> {
 
 	@Override
 	public String toString() {
-		String ss = this.getId()+","+this.getSrcNode().getName()+","+this.getTimeInit()+","+this.getWL();
+		String ss = this.getId()+"\t"+this.getSrcNode()+"\t"+this.getTimeInit()+"\t"+this.getWL();
 		return ss;
 	}
+
 }

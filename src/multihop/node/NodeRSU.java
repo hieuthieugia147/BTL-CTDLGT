@@ -47,7 +47,9 @@ public class NodeRSU extends NodeBase {
 	}
 	
 	public String toString() {
-		return "Name: " + name + " - " + lat + " - " + lng + "\tcWL: " + CWL + "\taWL: " + aWL + "\tqReq: " + qReq + "\tdoneReq: " + doneReq + "\tqReqV: " + qReqV;
+		
+		return name + ": " + lat + " , " + lng;
+		
 	}
 	
 	public Queue<RequestRSU> getqReqV() {

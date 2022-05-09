@@ -32,19 +32,21 @@ public class TopoUtils {
 		for (int i = 0; i < m; i++) { // y
 			for (int j = 0; j < n; j++) { // x
 				switch (type) {
-				case 0:
-					node = new NodeVehicle(id, "V" + String.valueOf(id), j * space, i * space, Constants.RANGE[type],
-							Constants.RES[type]);
-					break;
-				case 1:
-					node = new NodeRSU(id, "R" + String.valueOf(id), j * space, i * space, Constants.RANGE[type],
-							Constants.RES[type]);
-					break;
-				case 2:
-					// TODO:
-				default:
-					System.out.println("ERR-TYPE of nodes");
-					break;
+					case 0:
+						node = new NodeVehicle(id, "V" + String.valueOf(id), j * space, i * space,
+								Constants.RANGE[type],
+								Constants.RES[type]);
+						break;
+					case 1:
+						node = new NodeRSU(id, "R" + String.valueOf(id), j * space, i * space, Constants.RANGE[type],
+								Constants.RES[type]);
+						break;
+					case 2:// 1-cloud
+						node = new NodeRSU(id, "R" + String.valueOf(id), j * space, i * space, Constants.RANGE[type],
+								Constants.RES[type]);
+					default:
+						System.out.println("ERR-TYPE of nodes");
+						break;
 				}
 
 				topo.add(id, node);
@@ -74,18 +76,22 @@ public class TopoUtils {
 			y[0] = n.getLng();
 			int id = generator.nextInt(3);
 
-			id = 3; // move with v = 0 ; fix
+			// id = 3; // move with v = 0 ; fix
 
 			v[0] = c_velo[id];
-			double cts = c_ts[id]; 
+			double cts = c_ts[id];
 			phi[0] = 0;
 			sign[0] = 0;
 
 			for (int i = 1; i < Constants.TSIM; ++i) {
 				sign[i] = sign[i - 1] + 1;
+
 				x[i] = x[i - 1] + v[i - 1] * 1 * Math.cos(phi[i - 1]);
+
 				y[i] = y[i - 1] + v[i - 1] * 1 * Math.sin(phi[i - 1]);
+
 				double dt = sign[i] - cts;
+
 				if (dt > 0) { // can be change
 					int change = generator.nextInt(3); // random 0 1 2
 					if (change < 2) { // change
@@ -95,8 +101,10 @@ public class TopoUtils {
 							if ((a / 10) != (b / 10)) {
 								phi[i] = phi[i - 1] + c_phi[change];
 								sign[i] = 0;
-								if (a % 10 == 0) x[i] = a;
-									else x[i] = (a / 10 + 1) * 10;
+								if (a % 10 == 0)
+									x[i] = a;
+								else
+									x[i] = (a / 10 + 1) * 10;
 								y[i] = y[i - 1] + x[i] - a;
 							}
 						} else {
@@ -105,8 +113,10 @@ public class TopoUtils {
 							if ((a / 10) != (b / 10)) {
 								phi[i] = phi[i - 1] + c_phi[change];
 								sign[i] = 0;
-								if (a % 10 == 0) y[i] = a;
-									else y[i] = (a / 10 + 1) * 10;
+								if (a % 10 == 0)
+									y[i] = a;
+								else
+									y[i] = (a / 10 + 1) * 10;
 								x[i] = x[i - 1] + y[i] - a;
 							}
 						}
@@ -114,12 +124,8 @@ public class TopoUtils {
 				}
 				v[i] = v[i - 1];
 				n.setVelo(v);
+
 			}
-			
-			// for(int i = 1; i<Constants.TSIM; i++){
-			// 	x[i] = x[0];
-			// 	y[i] = y[0];
-			// }
 
 			n.setX(x);
 			n.setY(y);
@@ -152,7 +158,7 @@ public class TopoUtils {
 				Vector<NodeRSU> pNode = new Vector<NodeRSU>();
 
 				for (NodeRSU nodep : topoRSU)
-					if(node.checkLK(node, i, nodep))
+					if (node.checkLK(node, i, nodep))
 						pNode.add(nodep);
 
 				node.getNodeParent().add(pNode);
@@ -168,7 +174,7 @@ public class TopoUtils {
 				Vector<NodeVehicle> neighNode = new Vector<NodeVehicle>();
 				for (NodeVehicle nodec : topo) { // for in topo-vehicle
 					if (node.checkLK(nodec, i)) { // just check range, don't check id
-						neighNode.add(nodec); 
+						neighNode.add(nodec);
 					}
 				}
 				node.getNodeChild().add(i, neighNode);
@@ -189,18 +195,19 @@ public class TopoUtils {
 	 * @param i - timeslot
 	 */
 	public static List<RTable> createRoutingTable(List<NodeVehicle> topo, List<RTable> rtable, RequestBase req,
-												  List<NodeVehicle> listNodeReq, int MAX, boolean single, int i) {
+			List<NodeVehicle> listNodeReq, int MAX, boolean single, int i) {
 		// adding root of req: reqID as name and
 		i = i - 1;
 		NodeVehicle root = req.getSrcNode();
-		rtable.add(0, new RTable(0, root.getName(), root.getName(), 0, root.getRes(), req));	// route == src
+		rtable.add(0, new RTable(0, root.getName(), root.getName(), 0, root.getRes(), req)); // route == src
 
 		int id = 1;
 
-		for (NodeVehicle n1 : root.getNodeNeighbor().get(i)) {		// node neighbor tại thời điểm i
-			if (root.getNodeNeighbor().get(i + 1).contains(n1)) {   // n1 is still neigbours in next ts	--> set lvl = 1
+		for (NodeVehicle n1 : root.getNodeNeighbor().get(i)) { // node neighbor tại thời điểm i
+			if (root.getNodeNeighbor().get(i + 1).contains(n1)) { // n1 is still neigbours in next ts --> set lvl = 1
 				n1.setLvl(1);
-				if (!listNodeReq.contains(n1)) {					// nếu không có n1 ở listNodeReq ở hiện tại --> thêm vào rtable, set npath = 1
+				if (!listNodeReq.contains(n1)) { // nếu không có n1 ở listNodeReq ở hiện tại --> thêm vào rtable, set
+													// npath = 1
 					rtable.add(id, new RTable(id, n1.getName(), root.getName(), 1, n1.getRes(), req));
 					rtable.get(id).setNpath(1);
 					id++;
@@ -264,12 +271,12 @@ public class TopoUtils {
 		// TODO Auto-generated constructor stub
 	}
 
-	public static List<RTable> createRoutingTableRSU(List<NodeRSU> topoRSU,RequestRSU req,
+	public static List<RTable> createRoutingTableRSU(List<NodeRSU> topoRSU, RequestRSU req,
 			List<NodeRSU> listNodeReqRSU, int hc, boolean single, int i) {
-		//diff: dont except req node (eg: R0 has req, R1 also assigns to R0)
+		// diff: dont except req node (eg: R0 has req, R1 also assigns to R0)
 
 		List<RTable> rtable = new ArrayList<RTable>(); // rtable of a request
-		
+
 		// adding root of req: reqID as name and
 		i = i - 1;
 		NodeRSU root = req.getSrcNodeRSU();
@@ -278,10 +285,10 @@ public class TopoUtils {
 		int id = 1;
 
 		for (NodeRSU n1 : root.getNodeNeigbour()) {
-				n1.setLvl(1);
-					rtable.add(id, new RTable(id, n1.getName(), root.getName(), 1, n1.getRes(), req));
-					rtable.get(id).setNpath(1);
-					id++;				
+			n1.setLvl(1);
+			rtable.add(id, new RTable(id, n1.getName(), root.getName(), 1, n1.getRes(), req));
+			rtable.get(id).setNpath(1);
+			id++;
 		}
 
 		// update cWL of node to routing table

@@ -1,3 +1,5 @@
 ts = 6.0
-reqid= 6	wlRSU = 409.0909090909091 (p(ratio)=0.0	srcNodeRSU: R0	srcNodeVehicle: V0)
+req6 (p(ratio)=0.0	srcNodeRSU: R1	srcNodeVehicle: V1)
+----
+req26 (p(ratio)=0.0	srcNodeRSU: R2	srcNodeVehicle: V3)
 ----
