@@ -1,0 +1,329 @@
+//	private static void updateTopo(List<Node> topo, Node req) {
+//		topo.add(req);
+//		for (Node node : topo) {
+//			if (node.checkLK(req) && (node.getId() != req.getId())) {
+//				node.getNodeLK().add(req);
+//				req.getNodeLK().add(node);
+//			}
+//		}
+//	}
+
+	/**
+	 * create topo size m*n
+	 * 
+	 * @param m:     longs
+	 * @param n:     width
+	 * @param space: distance node to node
+	 * @param type:  0 - vehicle, 1- RSU/MN, 2 - Server/IN
+	 */
+//	private static List<NodeBase> createTopo(int m, int n, int space, int type) {
+//		NodeBase node = null;
+//		List<NodeBase> topo = new ArrayList<NodeBase>();
+//		int id = 0;
+//		for (int i = 0; i < m; i++) { // y
+//			for (int j = 0; j < n; j++) { // x
+//
+//				switch (type) {
+//				case 0:
+//					node = new NodeVehicle(id, "V" + String.valueOf(id), j * space, i * space, Constants.RANGE[type],
+//							Constants.RES[type]);
+//					break;
+//				case 1:
+//					node = new NodeRSU(id, "R" + String.valueOf(id), j * space, i * space, Constants.RANGE[type],
+//							Constants.RES[type]);
+//					break;
+//				case 2:
+//					node = new NodeRSU(id, "S" + String.valueOf(id), j * space, i * space, Constants.RANGE[type],
+//							Constants.RES[type]);
+//					break;
+//				default:
+//					System.out.println("ERR-TYPE of nodes");
+//					break;
+//				}
+//				topo.add(id, node);
+//				topo.get(id).setRes(Constants.RES[type]);
+//				topo.get(id).setRange(Constants.RANGE[type]);
+//				id++;
+//			}
+//		}
+//
+//		return topo;
+//	}
+
+//	private static List<Node> findNeighbour(List<Node> topo, Node root) {
+//		List<Node> neigbourNode = new ArrayList<Node>();
+//		int id = 1;
+//
+//		for (Node n1 : root.getNodeLK()) {
+//			n1.setLvl(1);
+//			neigbourNode.add(n1);
+//			id++;
+////			System.out.println(">>\tADD" + id + " " + n1.getId());
+//		}
+//
+//		for (Node n1 : root.getNodeLK()) {
+//			for (Node n2 : n1.getNodeLK()) {
+//				int npath = 2;
+//				if (n2.getId() != root.getId() && (n2.getLvl() > n1.getLvl()) && (!neigbourNode.contains(n2))) {
+//					n2.setLvl(2);
+//					neigbourNode.add(n2);
+//					// System.out.println(">>\tADD" + id + " " + n2.getId());
+//
+//					id++;
+//				}
+//			}
+//		}
+//
+//		for (Node t : topo) {
+//			t.setLvl(Constants.MAXINT);
+//		}
+//		return neigbourNode;
+//
+//	}
+
+	/**
+	 * @param i - timeslot
+	 */
+//	private static List<RTable> createRoutingTable(List<NodeVehicle> topo, List<RTable> rtable, RequestBase req,
+//			List<NodeVehicle> listNodeReq, int MAX, boolean single, int i) {
+//		// adding root of req: reqID as name and
+//		i = i - 1;
+//		NodeVehicle root = req.getSrcNode();
+//		rtable.add(0, new RTable(0, root.getName(), root.getName(), 0, root.getRes(), req));
+//
+//		int id = 1;
+//
+//		for (NodeVehicle n1 : root.getNodeLK().get(i)) {
+//			if (root.getNodeLK().get(i + 1).contains(n1)) { // n1 is still neigbours in next ts
+//				// System.out.println("Node: " + root.getId() + "neigh: " + n1.getId() + "at: "
+//				// + i);
+//				n1.setLvl(1);
+//				if (!listNodeReq.contains(n1)) {
+//					rtable.add(id, new RTable(id, n1.getName(), root.getName(), 1, n1.getRes(), req));
+//					rtable.get(id).setNpath(1);
+//					id++;
+//				}
+//			}
+//
+//			// System.out.println(">>\tADD DES: " + n1.getName() + " ROUTE: " +
+//			// root.getName() + " | " + 1);
+//
+//		}
+//
+////		for (Node n1 : root.getNodeLK()) {
+////			// System.out.println("\n>NODE DIRECT: " + n1.getName() + " ROUTE: " +
+////			// root.getName());
+////			for (Node n2 : n1.getNodeLK()) {
+////				int npath = 2;
+////				if (n2.getId() != root.getId() && (n2.getLvl() > n1.getLvl()) && (!listNodeReq.contains(n2))) {
+////					n2.setLvl(2);
+////					// adding vNode
+////					n2.getvNode().add(n1);
+////					rtable.add(id, new RTable(id, n2.getName(), n1.getName(), 2, n1.getRes(), req));
+////					rtable.get(id).setNpath(npath);
+////					// System.out.println(">>\tADD DES: " + n2.getName() + " ROUTE: " + n1.getName()
+////					// + " | " + npath);
+////
+////					id++;
+////
+////				}
+////			}
+////		}
+//
+////		for (Node n2 : topo) {
+////			if(n2.getLvl()==2) {
+////				for (Node n3:n2.getNodeLK()) {
+////					int npath=3;
+////					if (n3.getId() != root.getId() && (n3.getLvl() > n2.getLvl()) && (!listNodeReq.contains(n3))) {
+////					n3.setLvl(3);
+////					rtable.add(id, new RTable(id, n3.getName(), n2.getName(), 2, n3.getRes(), req));
+////					rtable.get(id).setNpath(npath);
+////					
+////					 System.out.println(">>\tADD DES: " + n3.getName() + " ROUTE: " + n2.getName()
+////					 + " | " + npath);
+////					
+////					id++;
+////					}
+////				}
+////			}
+////		}
+//
+//		// Caclc with >=2 hops
+//		for (int maxHop = 2; maxHop <= MAX; maxHop++) {
+//			for (NodeVehicle n : topo) {
+//				if (n.getLvl() == (maxHop - 1)) {
+//					for (NodeVehicle n1 : n.getNodeLK().get(i)) {
+//						int npath = maxHop;
+//						if (n1.getId() != root.getId() && (n1.getLvl() > n.getLvl()) && (!listNodeReq.contains(n1))) {
+//							n1.setLvl(maxHop);
+//							rtable.add(id, new RTable(id, n1.getName(), n.getName(), maxHop, n1.getRes(), req));
+//							rtable.get(id).setNpath(npath);
+//
+//							// System.out.println(">>\tADD DES: " + n1.getName() + " ROUTE: " + n.getName()
+//							// + " | " + npath);
+//
+//							id++;
+//						}
+//
+//					}
+//
+//				}
+//			}
+//		}
+//
+//		// update cWL of node to routing table
+//		for (RTable r : rtable) {
+//			for (NodeVehicle t : topo) {
+//				if (t.getName().equals(r.getDes())) {
+//					r.setcWL(t.getcWL());
+//					// System.out.println("Adding r: " + r.toString() + " " +r.getcWL());
+//				}
+//			}
+//		}
+//
+////		System.out.println("\ncreated RoutingTable: ");
+////		rtable.forEach((e) -> {
+////			System.out.println(">" + " " + e.toString());
+////		});
+//
+//		if (single) {
+//			// delete multi-route
+//			List<String> desNode = new ArrayList<String>();
+//			List<RTable> rmNode = new ArrayList<RTable>();
+//			List<RTable> rtableClone = new ArrayList<RTable>();
+//			rtableClone = rtable;
+//
+//			for (RTable r : rtableClone) {
+//				if (!desNode.contains(r.getDes())) { // new desNode
+//					desNode.add(r.getDes());
+//
+//				} else {
+//					rmNode.add(r);
+//				}
+//			}
+//			for (RTable rm : rmNode) {
+//				rtable.remove(rm);
+//			}
+//			// end delete
+//		}
+//
+//		return rtable;
+//
+//	}
+
+	/**
+	 * get rations for networks using PSO config PSO prams in the method
+	 * 
+	 * @param workload  is total workload need assigned
+	 * @param bestNode  is the data owner node, others connect to it
+	 * @param rtable    is full info of network, can cacl time_trans, time_compute
+	 *                  using prams in the table
+	 * @param mapRTable
+	 * @param ts
+	 * @return ration p as HashMap<id,value>
+	 */
+//	private static HashMap<Integer, Double> getPSO(List<RTable> rtable, HashMap<Integer, List<RTable>> mapRTable,
+//			int testCase, double ts) {
+//
+//		HashMap<Integer, Double> result = new HashMap<Integer, Double>();
+//		// int num = bestNode.getNodeChild().size()+1;
+//		// int num = 6; // number of node in network
+//		int num = rtable.size();
+//		double[] p = new double[num];
+//
+//		int particles = Constants.particles;
+//		int epchos = Constants.epchos;
+//		int nnodes = num; // number of nodes/dimenssion
+//
+//		int nworker = num;
+//
+//		double[] cWorkload = new double[nworker]; // workers
+//		for (int i = 0; i < cWorkload.length; i++) {
+//			cWorkload[i] = 0;
+//		}
+//
+//		PSOVector currentWorkload = new PSOVector(cWorkload);
+//
+//		PSOSwarm swarm = new PSOSwarm(particles, epchos, nnodes, currentWorkload, rtable, mapRTable, testCase);
+//		// LogPSO log1 = LogPSO.getInstance();
+//		// log1.log("ts: " + ts + "\n");
+//		System.out.println("ts = " + ts);
+//		Map<Integer, Double> ratio = swarm.run("service-id-string");
+//		// ` System.out.println(ratio.toString());
+//
+////		p[0]=bestNode.getRes()/bestNode.getGain();
+////		result.put(bestNode.getId(), p[0]);
+////		bestNode.setWL(p[0]*workload);
+////		
+////		int i=1;
+////		for(Node n:bestNode.getNodeChild()) {
+////			double k = Util.calcDistance(n, n.getParent());
+////			p[i]=(n.getGain()*Constants.FIXNUM/k)/bestNode.getGain();
+////			result.put(n.getId(), p[i]);
+////			n.setWL(p[i]*workload);
+////			i++;
+////		}
+//		result = (HashMap<Integer, Double>) ratio;
+//
+//		return result;
+//
+//	}
+
+	/**
+	 * @param topo = list node
+	 * @return topo = list node adding neighbour node/ nodelk
+	 */
+
+//	private static void setupTopo(List<Node> topo) {
+//
+//		for (Node node : topo) {
+//			for (int i = 0; i < Constants.TSIM; i++) {
+//				Vector<Node> neighNode = new Vector<Node>();
+//				// System.out.println("\nNode " + node.getName() + " at i: " + i + " add nei:
+//				// ");
+//
+//				for (Node nodec : topo) {
+//					if ((node.checkLK(nodec, i)) && (node.getId() != nodec.getId())) {
+//						// node.getNodeLK().add(nodec); // set neighbor
+//						neighNode.add(nodec);
+//						// System.out.print(nodec.getName() + " ");
+//					}
+//				}
+//				node.getNodeLK().add(i, neighNode);
+//			}
+//		}
+//
+//	}
+//
+//	private static void setupTopoRSU(List<Node> topoRSU, List<Node> topo) {
+//		for (Node node : topoRSU) {
+//			// adding nodeLK as child-node of RSU
+//			for (int i = 0; i < Constants.TSIM; i++) {
+//				Vector<Node> neighNode = new Vector<Node>();
+//				for (Node nodec : topo) { // for in topo-vehicle
+//					if (node.checkLKRSU(nodec, i)) { // just check range, don't check id
+//						neighNode.add(nodec);
+//					}
+//				}
+//				node.getNodeLK().add(i, neighNode);
+//			}
+//
+//			// adding nodeLKRSU as RSU-neigbour-node
+//			// Vector<Node> neighNodeRSU = new Vector<Node>();
+//			for (Node nodec : topoRSU) {
+//				if ((node.checkLK(nodec)) && (node.getId() != nodec.getId())) {
+//					node.getNodeLKRSU().add(nodec);
+//				}
+//			}
+//		}
+//
+//	}
+
+//	private static int findMaxLvl(Node[] topo) {
+//		int max = 0;
+//		for (Node node : topo) {
+//			if (node.getLvl() > max)
+//				max = node.getLvl();
+//		}
+//		return max;
+//	}
