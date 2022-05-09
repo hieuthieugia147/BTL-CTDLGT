@@ -1,5 +1,5 @@
 /bin/
 /target/
-# *.xlsx
-# *.txt
-# *.csv
+*.xlsx
+*.txt
+*.csv

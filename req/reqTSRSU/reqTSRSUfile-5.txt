@@ -1,3 +1,0 @@
-ts = 5.0
-reqid= 5	wlRSU = 409.0909090909091 (p(ratio)=0.0	srcNodeRSU: R0	srcNodeVehicle: V0)
-----
