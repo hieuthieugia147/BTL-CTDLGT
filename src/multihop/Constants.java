@@ -18,10 +18,12 @@ public class Constants {
 
 	// public final static double BW = 1/0.00004;
 	public final static double BW = 1 / 0.004;
-	public final static double BW1[] = { 1 / 0.004, 1 / 0.0004, 1 / 0.004 };
+	public final static double BW1[] = { 1 / 0.004, 1 / 0.0004, 1 / 0.004 }; // V2V,V2R
+																				// R2R
+																				// R2C
 
 	// Resource is process capacity of Node. t_process = RES * WL.
-	public final static double[] RES = { 1 / 0.033, 10 / 0.033, 25 / 0.033 };
+	public final static double[] RES = { 1 / 0.033, 10 / 0.033, 100 / 0.033 };
 	// public final static double LAMBDA = 1/RES;
 
 	// pso prames
@@ -29,8 +31,8 @@ public class Constants {
 	public final static int epchos = 1000;
 
 	// REQ prams
-	public final static int NUM_REQ = 10; // rate *100
-	public final static int TSIM = 15; // simulation time
+	public final static int NUM_REQ = 20; // rate *100
+	public final static int TSIM = 20; // simulation time
 	public final static int TS = 1; // 1ts = 1s
 
 	public final static int MAXHOP = 1;

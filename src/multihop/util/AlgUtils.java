@@ -12,8 +12,8 @@ import multihop.RTable;
 
 public class AlgUtils {
 
-	public static HashMap<Integer, Double> getPSO(List<RTable> rtable, HashMap<Integer, List<RTable>> mapRTable, int testCase, double ts)
-	{
+	public static HashMap<Integer, Double> getPSO(List<RTable> rtable, HashMap<Integer, List<RTable>> mapRTable,
+			int testCase, double ts) {
 		HashMap<Integer, Double> result = new HashMap<Integer, Double>();
 		int num = rtable.size();
 		int particles = Constants.particles;
@@ -25,12 +25,13 @@ public class AlgUtils {
 		System.out.println("Running PSO in ts = " + ts);
 		Map<Integer, Double> ratio = swarm.run("service-id-string");
 
-		result = ( HashMap<Integer, Double> ) ratio;
+		result = (HashMap<Integer, Double>) ratio;
 
 		return result;
 	}
 
-	public static HashMap<Integer, Double> getPSORSU(List<RTable> rtable, HashMap<Integer, List<RTable>> mapRTable,	int testCase, double ts) {
+	public static HashMap<Integer, Double> getPSORSU(List<RTable> rtable, HashMap<Integer, List<RTable>> mapRTable,
+			int testCase, double ts) {
 		HashMap<Integer, Double> result = new HashMap<Integer, Double>();
 		int particles = Constants.particles;
 		int epchos = Constants.epchos;
@@ -39,12 +40,13 @@ public class AlgUtils {
 
 		if (dim > 0) {
 			PSOSwarmRSU swarm = new PSOSwarmRSU(particles, epchos, dim, rtable, mapRTable, testCase);
-			System.out.println("Running PSO in ts = " + ts);
+			System.out.println("Running PSO in RSU ts = " + ts);
 			Map<Integer, Double> ratio = swarm.run("service-id-string");
 			result = (HashMap<Integer, Double>) ratio;
+		} else {
+			System.out.println("NO REQ FROM VEHICLE -> RSU");
 		}
-		else {System.out.println("NO REQ FROM VEHICLE -> RSU");}
-		
+
 		return result;
 	}
 

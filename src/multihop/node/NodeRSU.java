@@ -11,7 +11,7 @@ import multihop.request.RequestRSU;
 public class NodeRSU extends NodeBase {
 	double CWL;
 	double aWL;
-//	double cWL;
+	// double cWL;
 
 	public NodeRSU(int id, String name, double lat, double lng, int range, double res) {
 		super(id, name, lat, lng, range, res);
@@ -20,12 +20,10 @@ public class NodeRSU extends NodeBase {
 
 	Vector<NodeRSU> nodeNeigbour = new Vector<NodeRSU>();
 	Vector<Vector<NodeVehicle>> nodeChild = new Vector<Vector<NodeVehicle>>();
-	
+
 	Queue<RequestRSU> qReq = new PriorityQueue<RequestRSU>();
 	List<RequestRSU> doneReq = new ArrayList<RequestRSU>();
 	Queue<RequestRSU> qReqV = new PriorityQueue<RequestRSU>();
-
-	
 
 	public Boolean checkLK(NodeVehicle a, int i) {
 		double ax = a.getX()[i];
@@ -45,13 +43,13 @@ public class NodeRSU extends NodeBase {
 		}
 		return false;
 	}
-	
+
 	public String toString() {
-		
+
 		return name + ": " + lat + " , " + lng;
-		
+
 	}
-	
+
 	public Queue<RequestRSU> getqReqV() {
 		return qReqV;
 	}

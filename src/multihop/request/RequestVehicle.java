@@ -130,10 +130,10 @@ public class RequestVehicle extends RequestBase {
 
 	@Override
 	public int compareTo(RequestBase o) {
-		
-		if (this.start >= ((RequestVehicle)o).start) {
+
+		if (this.start >= ((RequestVehicle) o).start) {
 			return 1;
-		} else if (this.start < ((RequestVehicle)o).start) {
+		} else if (this.start < ((RequestVehicle) o).start) {
 			return -1;
 		} else {
 			return 0;

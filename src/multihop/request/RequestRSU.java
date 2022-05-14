@@ -7,7 +7,7 @@ public class RequestRSU extends RequestVehicle {
 	NodeRSU srcNodeRSU;
 	int desRSU;
 	double wlRSU;
-	double timeVR; // t_trans from Vehicle to RSU
+	double timeVR;// t_trans from Vehicle to RSU
 
 	public RequestRSU(int id, double wL, NodeVehicle srcNode, double timeInit, boolean done, int des, String route,
 			double start, double end) {
@@ -15,16 +15,18 @@ public class RequestRSU extends RequestVehicle {
 	}
 
 	public RequestRSU(RequestVehicle rv) {
-		//dWL = rv.getMovedData();
-		super(rv.getId(), rv.getMovedData(),rv.getSrcNode(),rv.getTimeInit(),rv.isDone(),rv.getDes(),rv.getRoute(),rv.getStart(),rv.getEnd());
-		//this.wlRSU = rv.getMovedData();
+		// dWL = rv.getMovedData();
+		super(rv.getId(), rv.getMovedData(), rv.getSrcNode(), rv.getTimeInit(), rv.isDone(), rv.getDes(), rv.getRoute(),
+				rv.getStart(), rv.getEnd());
+		// this.wlRSU = rv.getMovedData();
 	}
-	
+
 	public String toString() {
-		if(this.srcNodeRSU!=null) {
-			return "req"+ this.id + " (p(ratio)=" + this.ratio + "\tsrcNodeRSU: " +  this.srcNodeRSU.getName() + "\tsrcNodeVehicle: " + this.srcNode.getName() + ")";
-		}else {
-			return "req"+ this.id + " (" + this.ratio + " " + this.srcNode.getName() + ")";
+		if (this.srcNodeRSU != null) {
+			return "req" + this.id + " (p(ratio)=" + this.ratio + "\tsrcNodeRSU: " + this.srcNodeRSU.getName()
+					+ "\tsrcNodeVehicle: " + this.srcNode.getName() + ")";
+		} else {
+			return "req" + this.id + " (" + this.ratio + " " + this.srcNode.getName() + ")";
 		}
 	}
 
@@ -52,14 +54,22 @@ public class RequestRSU extends RequestVehicle {
 		this.wlRSU = wlRSU;
 	}
 
+	public double getMovedDataRSU() {
+		return movedData;
+	}
+
+	public void setMovedDataRSU(double movedData) {
+		this.movedData = movedData;
+	}
+
 	@Override
-	public int compareTo(RequestBase o) {	
-		if (this.start >= ((RequestRSU)o).start) {
+	public int compareTo(RequestBase o) {
+		if (this.start >= ((RequestRSU) o).start) {
 			return 1;
-		} else if (this.start < ((RequestRSU)o).start) {
+		} else if (this.start < ((RequestRSU) o).start) {
 			return -1;
 		} else {
 			return 0;
 		}
-	}	
+	}
 }

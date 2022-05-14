@@ -1,51 +1,62 @@
 package multihop.node;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Vector;
+
+import multihop.request.RequestCloud;
+
 public class NodeCloud extends NodeBase {
-	int id;
-	String name;
-
-	double lat;
-	double lng;
-
-	double res;
+	double CWL;
 	double aWL;
-	double cWL;
 
 	public NodeCloud(int id, String name, double lat, double lng, int range, double res) {
 		super(id, name, lat, lng, range, res);
 		// TODO Auto-generated constructor stub
 	}
 
-	public int getId() {
-		return id;
+	Queue<RequestCloud> qReq = new PriorityQueue<RequestCloud>();
+	List<RequestCloud> doneReq = new ArrayList<RequestCloud>();
+	Queue<RequestCloud> qReqV = new PriorityQueue<RequestCloud>();
+
+	public String toString() {
+
+		return name + ": " + lat + " , " + lng;
+
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public Queue<RequestCloud> getqReqV() {
+		return qReqV;
 	}
 
-	public String getName() {
-		return name;
+	public void setqReqV(Queue<RequestCloud> qReqV) {
+		this.qReqV = qReqV;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public Queue<RequestCloud> getqReq() {
+		return qReq;
 	}
 
-	public void setLat(double lat) {
-		this.lat = lat;
+	public void setqReq(Queue<RequestCloud> qReq) {
+		this.qReq = qReq;
 	}
 
-	public double getLng() {
-		return lng;
+	public List<RequestCloud> getDoneReq() {
+		return doneReq;
 	}
 
-	public double getRes() {
-		return res;
+	public void setDoneReq(List<RequestCloud> doneReq) {
+		this.doneReq = doneReq;
 	}
 
-	public void setRes(double res) {
-		this.res = res;
+	public double getCWL() {
+		return CWL;
+	}
+
+	public void setCWL(double cWL) {
+		CWL = cWL;
 	}
 
 	public double getaWL() {
@@ -55,13 +66,4 @@ public class NodeCloud extends NodeBase {
 	public void setaWL(double aWL) {
 		this.aWL = aWL;
 	}
-
-	public double getcWL() {
-		return cWL;
-	}
-
-	public void setcWL(double cWL) {
-		this.cWL = cWL;
-	}
-
 }

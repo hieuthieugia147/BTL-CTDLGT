@@ -1,0 +1,14 @@
+id: 0 req:51 src:V6 des:V6 route:V6 p(ratio):0.0 tComp:0.0 tTrans:0.0 tSer: 0.0 hop:0 npath:0 cWL:0.0 res:30.3030303030303
+id: 1 req:51 src:V6 des:V2 route:V6 p(ratio):0.0 tComp:0.0 tTrans:0.0 tSer: 0.0 hop:1 npath:1 cWL:3.673094582185513 res:30.3030303030303
+id: 2 req:51 src:V6 des:V3 route:V6 p(ratio):0.0 tComp:0.0 tTrans:0.0 tSer: 0.0 hop:1 npath:1 cWL:725.8700286081569 res:30.3030303030303
+id: 3 req:51 src:V6 des:V4 route:V6 p(ratio):0.0 tComp:0.0 tTrans:0.0 tSer: 0.0 hop:1 npath:1 cWL:717.886354951904 res:30.3030303030303
+id: 4 req:51 src:V6 des:V7 route:V6 p(ratio):0.0 tComp:0.0 tTrans:0.0 tSer: 0.0 hop:1 npath:1 cWL:702.6998565525332 res:30.3030303030303
+id: 5 req:51 src:V6 des:V11 route:V6 p(ratio):0.0 tComp:0.0 tTrans:0.0 tSer: 0.0 hop:1 npath:1 cWL:2.2737367544323206E-13 res:30.3030303030303
+id: 6 req:51 src:V6 des:V13 route:V6 p(ratio):0.0 tComp:0.0 tTrans:0.0 tSer: 0.0 hop:1 npath:1 cWL:3.6730945821857404 res:30.3030303030303
+id: 7 req:51 src:V6 des:V14 route:V6 p(ratio):0.0 tComp:0.0 tTrans:0.0 tSer: 0.0 hop:1 npath:1 cWL:509.6019423792943 res:30.3030303030303
+id: 0 req:151 src:V9 des:V9 route:V9 p(ratio):0.0 tComp:0.0 tTrans:0.0 tSer: 0.0 hop:0 npath:0 cWL:0.0 res:30.3030303030303
+id: 1 req:151 src:V9 des:V3 route:V9 p(ratio):0.0 tComp:0.0 tTrans:0.0 tSer: 0.0 hop:1 npath:1 cWL:725.8700286081569 res:30.3030303030303
+id: 2 req:151 src:V9 des:V4 route:V9 p(ratio):0.0 tComp:0.0 tTrans:0.0 tSer: 0.0 hop:1 npath:1 cWL:717.886354951904 res:30.3030303030303
+id: 0 req:251 src:V8 des:V8 route:V8 p(ratio):0.0 tComp:0.0 tTrans:0.0 tSer: 0.0 hop:0 npath:0 cWL:0.0 res:30.3030303030303
+id: 1 req:251 src:V8 des:V3 route:V8 p(ratio):0.0 tComp:0.0 tTrans:0.0 tSer: 0.0 hop:1 npath:1 cWL:725.8700286081569 res:30.3030303030303
+id: 2 req:251 src:V8 des:V4 route:V8 p(ratio):0.0 tComp:0.0 tTrans:0.0 tSer: 0.0 hop:1 npath:1 cWL:717.886354951904 res:30.3030303030303

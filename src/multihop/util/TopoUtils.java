@@ -10,9 +10,11 @@ import multihop.RTable;
 import multihop.node.NodeBase;
 import multihop.node.NodeRSU;
 import multihop.node.NodeVehicle;
+import multihop.node.NodeCloud;
 import multihop.request.RequestBase;
 import multihop.request.RequestRSU;
 import multihop.request.RequestVehicle;
+import multihop.request.RequestCloud;
 
 public class TopoUtils {
 
@@ -42,7 +44,7 @@ public class TopoUtils {
 								Constants.RES[type]);
 						break;
 					case 2:// 1-cloud
-						node = new NodeRSU(id, "R" + String.valueOf(id), j * space, i * space, Constants.RANGE[type],
+						node = new NodeCloud(id, "R" + String.valueOf(id), j * space, i * space, Constants.RANGE[type],
 								Constants.RES[type]);
 					default:
 						System.out.println("ERR-TYPE of nodes");
@@ -99,7 +101,7 @@ public class TopoUtils {
 							int a = (int) x[i - 1];
 							int b = (int) x[i];
 							if ((a / 10) != (b / 10)) {
-								phi[i] = phi[i - 1] + c_phi[change];
+								phi[i] = phi[i - 1] + c_phi[change + 1];
 								sign[i] = 0;
 								if (a % 10 == 0)
 									x[i] = a;
@@ -111,7 +113,7 @@ public class TopoUtils {
 							int a = (int) y[i - 1];
 							int b = (int) y[i];
 							if ((a / 10) != (b / 10)) {
-								phi[i] = phi[i - 1] + c_phi[change];
+								phi[i] = phi[i - 1] + c_phi[change] + 1;
 								sign[i] = 0;
 								if (a % 10 == 0)
 									y[i] = a;
@@ -294,6 +296,31 @@ public class TopoUtils {
 		// update cWL of node to routing table
 		for (RTable r : rtable) {
 			for (NodeRSU t : topoRSU) {
+				if (t.getName().equals(r.getDes())) {
+					r.setcWL(t.getCWL());
+					// System.out.println("Adding r: " + r.toString() + " " +r.getcWL());
+				}
+			}
+		}
+
+		return rtable;
+
+	}
+
+	public static List<RTable> createRoutingTableCloud(List<NodeCloud> topoCloud, RequestCloud req,
+			List<NodeCloud> listNodeReqCloud, int hc, boolean single, int i) {
+		// diff: dont except req node (eg: R0 has req, R1 also assigns to R0)
+
+		List<RTable> rtable = new ArrayList<RTable>(); // rtable of a request
+
+		// adding root of req: reqID as name and
+		i = i - 1;
+		NodeCloud root = req.getSrcNodeCloud();
+		rtable.add(0, new RTable(0, root.getName(), root.getName(), 0, root.getRes(), req));
+
+		// update cWL of node to routing table
+		for (RTable r : rtable) {
+			for (NodeCloud t : topoCloud) {
 				if (t.getName().equals(r.getDes())) {
 					r.setcWL(t.getCWL());
 					// System.out.println("Adding r: " + r.toString() + " " +r.getcWL());

@@ -6,7 +6,6 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Vector;
 
-import multihop.request.RequestBase;
 import multihop.request.RequestVehicle;
 
 public class NodeVehicle extends NodeBase {

@@ -26,6 +26,7 @@ import multihop.node.NodeCloud;
 import multihop.request.RequestBase;
 import multihop.request.RequestRSU;
 import multihop.request.RequestVehicle;
+import multihop.request.RequestCloud;
 import multihop.util.AlgUtils;
 import multihop.util.TopoUtils;
 import multihop.util.TrafficUtils;
@@ -55,15 +56,6 @@ public class MainSim {
 		TopoUtils.updateTimeTopo(topo); // adding moving by time for Vehicle
 
 		// my
-
-		FileWriter topo_vehicle_begin = new FileWriter("req\\topo_vehicle\\topo_vehicle-0.txt");
-		topo_vehicle_begin.write("Name Position Velocity\n");
-		topo_vehicle_begin.write("id\tname\tx\ty\tvelo\n");
-		for (NodeVehicle nnn : topo) {
-			topo_vehicle_begin.write(nnn.getId() + "\t" + nnn.getName() + "\t" + nnn.getX()[0] + "\t" + nnn.getY()[0]
-					+ "\t" + nnn.getVelo()[0] + "\n");
-		}
-		topo_vehicle_begin.close();
 
 		// RSU node
 		_m = 3;
@@ -129,10 +121,10 @@ public class MainSim {
 					String o = single == true ? "s" : "m";
 
 					FileWriter myWriterPSO;
-					myWriterPSO = new FileWriter("topoPSO-" + hc + "." + o + "." + testCase + ".txt");
+					myWriterPSO = new FileWriter("topoPSO-" + hc + "." + o + "." + testCase + ".csv");
 
 					FileWriter myWriterPSOserv;
-					myWriterPSOserv = new FileWriter("topoPSO_tserv-" + hc + "." + o + "." + testCase + ".txt");
+					myWriterPSOserv = new FileWriter("topoPSO_tserv-" + hc + "." + o + "." + testCase + ".csv");
 
 					myWriterPSOserv.write("\n\n" + testCase + "." + hc + "." + single + "\n");
 					myWriterPSO.write("\n" + testCase + "." + hc + "." + single + "\n");
@@ -145,15 +137,6 @@ public class MainSim {
 						double ts = TS * t;
 
 						// print - begin ts = 1 to 14
-
-						FileWriter topo_vehicle = new FileWriter("req\\topo_vehicle\\topo_vehicle-" + t + ".txt");
-						topo_vehicle.write("Name Position Velocity\n");
-						topo_vehicle.write("id\tname\tx\ty\tvelo\n");
-						for (NodeVehicle nnn : topo) {
-							topo_vehicle.write(nnn.getId() + "\t" + nnn.getName() + "\t" + nnn.getX()[t] + "\t"
-									+ nnn.getY()[t] + "\t" + nnn.getVelo()[t] + "\n");
-						}
-						topo_vehicle.close();
 
 						/**
 						 * --- 1. Create routing table---
@@ -235,27 +218,29 @@ public class MainSim {
 
 							HashMap<Integer, Double> resultPSO = AlgUtils.getPSO(rtable, mapRTable, testCase, ts);
 
-							// my
-
-							FileWriter resultPSO_file = new FileWriter(
-									"req\\resultPSO_file\\resultPSO_file-" + t + ".csv");
-							for (Integer key : resultPSO.keySet()) {
-								resultPSO_file.write(key + "\t" + resultPSO.get(key) + "\n");
-							}
-							resultPSO_file.close();
-
-							// get output of PSO-alg
 							Set<Integer> rID = resultPSO.keySet();
 							for (Integer id : rID) {
 								rtable.get(id).setRatio(resultPSO.get(id));
 							}
 
-							// my - add time, hop, npath, cWL
-
-							FileWriter rtable_after_resultPSO = new FileWriter(
-									"req\\rtable_after_resultPSO\\rtable_after-" + t + ".csv");
-							rtable_after_resultPSO.write("Thoi gian ts=" + t + "\n");
-							rtable_after_resultPSO.close();
+							// ArrayList<Integer> duplicate = new ArrayList<>();
+							// for (int i = 0; i < rtable.size() - 1; i++) {
+							// // System.out.println(rtable.get(i).getDes());
+							// for (int j = i + 1; j < rtable.size(); j++) {
+							// if (rtable.get(i).getDes().equals(rtable.get(j).getDes())) {
+							// duplicate.add(j);
+							// }
+							// }
+							// }
+							// for (Integer ii : duplicate) {
+							// for (RTable rrr : rtable) {
+							// if (rrr.getId() == 0
+							// && rrr.getDes().equals(rtable.get(ii).getReq().getSrcNode().getName())) {
+							// rrr.setRatio(rrr.getRatio() + rtable.get(ii).getRatio());
+							// rtable.get(ii).setRatio(0);
+							// }
+							// }
+							// }
 
 							/**
 							 * --- 3. Logging ---
@@ -307,16 +292,6 @@ public class MainSim {
 							}
 						}
 
-						// my
-
-						FileWriter reqTSRSUfile = new FileWriter("req\\reqTSRSU\\reqTSRSUfile-" + t + ".txt");
-						reqTSRSUfile.write("ts = " + ts + "\n");
-						for (RequestRSU rr : reqTSRSU) {
-							reqTSRSUfile.write(rr + "\n");
-							reqTSRSUfile.write("----\n");
-						}
-						reqTSRSUfile.close();
-
 						for (RequestRSU r : reqTSRSU) {
 							List<RTable> rtableREQ = new ArrayList<RTable>(); // rtable of a request
 							int reqId = r.getId();
@@ -359,17 +334,11 @@ public class MainSim {
 							i++;
 						}
 
+						//
+
 						for (Integer i2 : id) {
 							rtableRSU.get(i2).setRatio(1); // set max to 1
 						}
-
-						// my
-
-						FileWriter rtableRSU_file = new FileWriter("req\\rtableRSU\\rtableRSU-" + t + ".txt");
-						for (RTable tt : rtableRSU) {
-							rtableRSU_file.write(tt + "\n");
-						}
-						rtableRSU_file.close();
 
 						// done set ratio to rtable.
 
@@ -382,57 +351,57 @@ public class MainSim {
 
 						insertQRSU(topoRSU, rtableRSU, t);
 
-						// my
-
-						FileWriter rtableRSU_file_after = new FileWriter(
-								"req\\rtableRSU_afer\\rtableRSU_after-" + t + ".txt");
-						for (RTable tt : rtableRSU) {
-							rtableRSU_file_after.write(tt + "\n");
-						}
-						rtableRSU_file_after.close();
-
-						// my
-
-						FileWriter mapRTableRSU_file = new FileWriter("req\\mapRTableRSU\\mapRTable-" + t + ".txt");
-						for (Map.Entry<Integer, List<RTable>> mapp : mapRTableRSU.entrySet()) {
-							mapRTableRSU_file.write(mapp.getKey() + "\n");
-							for (RTable tt : mapp.getValue()) {
-								mapRTableRSU_file.write(tt + "\n");
-							}
-						}
-						mapRTableRSU_file.close();
-
-						// System.out.println("TEST AFTER INSERT: ");
-						// for (NodeRSU n : topoRSU) {
-						// n.getqReq().forEach(nqr -> System.out.println(n.getName() + " : " +
-						// nqr.toString()));
-						// }
-
 						updateQRSU(topoRSU, ts);
 
 						updateCWLRSU(topoRSU, ts);
 
-						// move to cloud/ check
-						// for (NodeCloud c : topoCloud) {
-						// for (NodeRSU n : topoRSU) {
-						// if (n.getqReqV().peek() != null) {
-						// double dc = c.getcWL() + n.getCWL();
-						// c.setcWL(dc);
-						// }
-						// ;
-						// n.setCWL(0);
-						// }
-						// }
-						// TODO calculate timeser in cloud
+						// 1.1 prepare request to node Cloud base: moving-data
 
-						List<RequestBase> listNodeReqCloud = new ArrayList<>();
-						Queue<RequestBase> reqTSCloud = new PriorityQueue<RequestBase>();
+						HashMap<Integer, List<RTable>> mapRTableCloud = new HashMap<Integer, List<RTable>>();
+						List<RTable> rtableCloud = new ArrayList<RTable>();
+
+						List<NodeCloud> listNodeReqCloud = new ArrayList<NodeCloud>();
+						Queue<RequestCloud> reqTSCloud = new PriorityQueue<RequestCloud>();
+
+						// list node moving data and the requestID
+
+						for (NodeCloud n : topoCloud) {
+							if (n.getqReqV().peek() != null) {
+								listNodeReqCloud.add(n);
+							}
+						}
+
+						// list request in a TS
+						for (NodeCloud n : topoCloud) {
+							for (RequestCloud rr : n.getqReqV()) { // multi req to 1 node
+								rr.setSrcNodeCloud(n);
+								reqTSCloud.add(rr);
+							}
+						}
+
+						for (RequestCloud r : reqTSCloud) {
+							List<RTable> rtableREQ = new ArrayList<RTable>(); // rtable of a request
+							int reqId = r.getId();
+							rtableREQ = TopoUtils.createRoutingTableCloud(topoCloud, r, listNodeReqCloud,
+									hc, single, t);
+							rtableCloud.addAll(rtableREQ); // merge all reqs
+							mapRTableCloud.put(reqId, rtableREQ); // merge reqs with id
+						}
+
+						calcTSerCloud(rtableCloud, testCase);
+
+						insertQCloud(topoCloud, rtableCloud, t);
+
+						updateQCloud(topoCloud, ts);
+
+						updateCWLCloud(topoCloud, ts);
 
 					} // endts
 					System.out.println("\n----- DONE REQ ------");
-					myWriterPSO.write("\nReqID\t" + "a(SrcNode)\t" + "i(DesNode)\t" + "k(Path)\t" + "p(Ratio)\t"
-							+ "dtTrans\t" + "tArrival\t" + "start\t" + "end\t" + "timeSer(PSO)\t" + "t_wait\t"
-							+ "t_proc\t" + "t_serv\t" + "moved_data" + "\n");
+					myWriterPSO.write("Vehicle TOPO\n");
+					myWriterPSO.write("\nReqID,\t" + "a(SrcNode),\t" + "i(DesNode),\t" + "k(Path),\t" + "p(Ratio),\t"
+							+ "dtTrans,\t" + "tArrival,\t" + "start,\t" + "end,\t" + "timeSer(PSO),\t"
+							+ "t_wait,\t" + "t_proc,\t" + "t_serv,\t" + "moved_data," + "\n");
 
 					// log for vehicle topo
 					for (RequestBase r : req) {
@@ -446,20 +415,21 @@ public class MainSim {
 									double t_wait = dv.getStart() - dv.getTimeArrival();
 									double t_proc = dv.getEnd() - dv.getStart();
 									double t_serv = dv.getTimeTrans() + t_wait + t_proc;
-									myWriterPSO.write(r.getId() + "\t" + dv.getSrcNode().getName() + "\t" + n.getName()
-											+ "\t" + dv.getRoute() + "\t" + dv.getRatio() + "\t" + dv.getTimeTrans()
-											+ "\t" + dv.getTimeArrival() + "\t" + dv.getStart() + "\t" + dv.getEnd()
-											+ "\t" + dv.getTimeSer() + "\t" + t_wait + "\t" + t_proc + "\t" + t_serv
-											+ "\t" + dv.getMovedData() + "\n");
+									myWriterPSO.write(r.getId() + ",\t" + dv.getSrcNode().getName() + ",\t"
+											+ n.getName()
+											+ ",\t" + dv.getRoute() + ",\t" + dv.getRatio() + ",\t" + dv.getTimeTrans()
+											+ ",\t" + dv.getTimeArrival() + ",\t" + dv.getStart() + ",\t" + dv.getEnd()
+											+ ",\t" + dv.getTimeSer() + ",\t" + t_wait + ",\t" + t_proc + ",\t" + t_serv
+											+ ",\t" + dv.getMovedData() + "\n");
 								}
 							}
 						}
 					}
 
 					myWriterPSO.write("\n RSU TOPO \n");
-					myWriterPSO.write("\nReqID\t" + "a(SrcNode)\t" + "i(DesNode)\t" + "k(Path)\t" + "p(Ratio)\t"
-							+ "dtTrans\t" + "tArrival\t" + "start\t" + "end\t" + "timeSer(PSO)\t" + "t_wait\t"
-							+ "t_proc\t" + "t_serv\t" + "moved_data\t" + "t_trans_vr\t" + "t_end_real" + "\n");
+					myWriterPSO.write("\nReqID,\t" + "a(SrcNode),\t" + "i(DesNode),\t" + "k(Path),\t" + "p(Ratio),\t"
+							+ "dtTrans,\t" + "tArrival,\t" + "start,\t" + "end,\t" + "timeSer(PSO),\t" + "t_wait,\t"
+							+ "t_proc,\t" + "t_serv,\t" + "moved_data,\t" + "t_trans_vr,\t" + "t_end_real," + "\n");
 
 					// log for RSU topo
 					for (RequestBase r : req) {
@@ -473,54 +443,51 @@ public class MainSim {
 									// double t_trans_vr = dv.getWL()/Constants.BW;
 									double t_trans_vr = dv.getTimeVR();
 
-									myWriterPSO.write(r.getId() + "\t" + dv.getSrcNode().getName() + "-"
-											+ dv.getSrcNodeRSU().getName() + "\t" + n.getName() + "\t" + dv.getRoute()
-											+ "\t" + dv.getRatio() + "\t" + dv.getTimeTrans() + "\t"
-											+ dv.getTimeArrival() + "\t" + dv.getStart() + "\t" + dv.getEnd() + "\t"
-											+ dv.getTimeSer() + "\t" + t_wait + "\t" + t_proc + "\t" + t_serv + "\t"
-											+ dv.getMovedData() + "\t" + t_trans_vr + "\t" +
+									myWriterPSO.write(r.getId() + ",\t" + dv.getSrcNode().getName() + "-"
+											+ dv.getSrcNodeRSU().getName() + ",\t" + n.getName() + ",\t" + dv.getRoute()
+											+ ",\t" + dv.getRatio() + ",\t" + dv.getTimeTrans() + ",\t"
+											+ dv.getTimeArrival() + ",\t" + dv.getStart() + ",\t" + dv.getEnd() + ",\t"
+											+ dv.getTimeSer() + ",\t" + t_wait + ",\t" + t_proc + ",\t" + t_serv + ",\t"
+											+ dv.getMovedData() + ",\t" + t_trans_vr + ",\t" + "no data" +
 											"\n");
 								}
 							}
 						}
 					}
 
-					// my
+					myWriterPSO.write("\n Cloud TOPO \n");
+					myWriterPSO.write("\nReqID,\t" + "a(SrcNode),\t" + "i(DesNode),\t" + "k(Path),\t" + "p(Ratio),\t"
+							+ "dtTrans,\t" + "tArrival,\t" + "start,\t" + "end,\t" + "timeSer(PSO),\t" + "t_wait,\t"
+							+ "t_proc,\t" + "t_serv,\t" + "moved_data,\t" + "t_trans_vr,\t" + "t_end_real," + "\n");
 
-					for (int t = 1; t <= nTS; t++) { // 1-14
-						FileWriter topoRSU_file = new FileWriter("req\\topoRSU\\topoRSU-" + t + ".csv");
+					// log for CLoud topo
+					for (RequestBase r : req) {
+						for (NodeCloud n : topoCloud) {
+							for (RequestBase d : n.getDoneReq()) {
+								if (d.getId() == r.getId()) {
+									RequestCloud dv = (RequestCloud) d;
+									double t_wait = dv.getStart() - dv.getTimeArrival();
+									double t_proc = dv.getEnd() - dv.getStart();
+									double t_serv = dv.getTimeTrans() + t_wait + t_proc;
+									// double t_trans_vr = dv.getWL()/Constants.BW;
+									double t_trans_vr = dv.getTimeRC();
 
-						topoRSU_file.write("ReqID," + "a(SrcNode)," + "i(DesNode)," + "k(Path)," + "p(Ratio),"
-								+ "dtTrans," + "tArrival," + "start," + "end," + "timeSer(PSO)," + "t_wait,"
-								+ "t_proc," + "t_serv," + "moved_data," + "t_trans_vr," + "t_end_real" + "\n");
-
-						for (RequestBase r : req) {
-							for (NodeRSU n : topoRSU) {
-								for (RequestBase d : n.getDoneReq()) {
-									if (d.getId() == r.getId()) {
-										RequestRSU dv = (RequestRSU) d;
-										double t_wait = dv.getStart() - dv.getTimeArrival();
-										double t_proc = dv.getEnd() - dv.getStart();
-										double t_serv = dv.getTimeTrans() + t_wait + t_proc;
-										double t_trans_vr = dv.getTimeVR();
-
-										topoRSU_file.write(r.getId() + "," + dv.getSrcNode().getName() + ","
-												+ dv.getSrcNodeRSU().getName() + "," + n.getName() + "," + dv.getRatio()
-												+ "," + dv.getRatio() + "," + dv.getTimeTrans() + ","
-												+ dv.getTimeArrival() + "," + dv.getStart() + "," + dv.getEnd() + ","
-												+ dv.getTimeSer() + "," + t_wait + "," + t_proc + "," + t_serv + ","
-												+ dv.getMovedData() + "," + t_trans_vr + "," +
-												"\n");
-									}
+									myWriterPSO.write(r.getId() + ",\t" + dv.getSrcNode().getName() + "-"
+											+ dv.getSrcNodeCloud().getName() + ",\t" + n.getName() + ",\t"
+											+ dv.getRoute()
+											+ ",\t" + dv.getRatio() + ",\t" + dv.getTimeTrans() + ",\t"
+											+ dv.getTimeArrival() + ",\t" + dv.getStart() + ",\t" + dv.getEnd() + ",\t"
+											+ dv.getTimeSer() + ",\t" + t_wait + ",\t" + t_proc + ",\t" + t_serv + ",\t"
+											+ dv.getMovedData() + ",\t" + t_trans_vr + ",\t" + "no data" +
+											"\n");
 								}
 							}
 						}
-						topoRSU_file.close();
 					}
-
 					// calc avg
 					double wait = 0;
 					int count = 0;
+					myWriterPSOserv.write("\n Vehicle logging\n" + "ID," + "Tser");
 					for (RequestBase r : req) {
 						double endM = 0;
 						for (NodeVehicle n : topo) {
@@ -535,11 +502,14 @@ public class MainSim {
 
 						// endM -= Math.floor(((RequestVehicle) r).getTimeArrival());
 						endM -= Math.floor(r.getTimeInit());
-						myWriterPSOserv.write("\n" + r.getId() + "\t" + endM);
+						if (endM < 0) {
+							endM = 0;
+						}
+						myWriterPSOserv.write("\n" + r.getId() + ",\t" + endM);
 					}
 					// System.out.println("AVG: " + wait / count);
 
-					myWriterPSOserv.write("\n RSU logging\n");
+					myWriterPSOserv.write("\n RSU logging\n" + "ID," + "Tser");
 					for (RequestBase r : req) {
 						double endM = 0;
 						for (NodeRSU n : topoRSU) {
@@ -554,8 +524,12 @@ public class MainSim {
 
 						// endM -= Math.floor(((RequestVehicle) r).getTimeArrival());
 						endM -= Math.floor(r.getTimeInit());
-						myWriterPSOserv.write("\n" + r.getId() + "\t" + endM);
+						if (endM < 0) {
+							endM = 0;
+						}
+						myWriterPSOserv.write("\n" + r.getId() + ",\t" + endM);
 					}
+					myWriterPSOserv.write("\n Cloud logging\n" + "ID," + "Tser");
 
 					myWriterPSOserv.close();
 					myWriterPSO.close();
@@ -565,9 +539,23 @@ public class MainSim {
 		}
 		System.out.println("----FINISH-----");
 		fListReq.close();
+
 		// listCWL.close();
 		// myWriterPSOserv.close();
 		// myWriterPSO.close();
+		for (int t = 1; t <= nTS; t++) { // 1-14
+
+			// print - begin ts = 1 to 14
+
+			FileWriter topo_vehicle = new FileWriter("req//topo_vehicle//topo_vehicle" + t + ".csv");
+			topo_vehicle.write("Name Position Velocity in" + t + "\n");
+			topo_vehicle.write("id,\tname,\tx,\ty,\tvelo,\n");
+			for (NodeVehicle nnn : topo) {
+				topo_vehicle.write(nnn.getId() + ",\t" + nnn.getName() + ",\t" + nnn.getX()[t] + ",\t"
+						+ nnn.getY()[t] + ",\t" + nnn.getVelo()[t] + "\n");
+			}
+			topo_vehicle.close();
+		}
 	}
 
 	private static void updateCWL(List<NodeVehicle> topo, double ts) {
@@ -635,13 +623,44 @@ public class MainSim {
 				n.setCWL((n.getaWL() - pWL) < 0 ? 0 : (n.getaWL() - pWL));
 				// System.out.println("\tcWL: " + n.getcWL());
 			}
+
+		}
+	}
+
+	private static void updateCWLCloud(List<NodeCloud> topoCloud, double ts) {
+		// System.out.println("\n----- Current WL: ");
+		// listCWL.write("p");
+		for (NodeCloud n : topoCloud) {
+			double pWL = 0; // processed workload
+			// double aWL = 0; // all assigned worload
+			if ((n.getqReq().size() != 0) || n.getDoneReq().size() != 0) { // node in processing
+				// System.out.println("Node " + n.getName());
+				// n.getDoneReq().forEach((d) -> {
+				// System.out.println("Done req: " + d.getStart() + " " + d.getEnd());
+				// });
+				// n.getqReq().forEach((q) -> System.out.println("Queue req: " + q.getStart() +
+				// " " + q.getEnd()));
+
+				for (RequestBase d : n.getDoneReq()) {
+					pWL += (((RequestCloud) d).getEnd() - ((RequestCloud) d).getStart()) * n.getRes();
+				}
+
+				if (n.getqReq().peek() != null) {
+					double lastStart = ((RequestCloud) n.getqReq().peek()).getStart();
+					if (lastStart < ts) {
+						pWL += (ts - lastStart) * n.getRes();
+					}
+				}
+				// System.out.print("Process WL: " + pWL + " / " + n.getaWL());
+				n.setCWL((n.getaWL() - pWL) < 0 ? 0 : (n.getaWL() - pWL));
+				// System.out.println("\tcWL: " + n.getcWL());
+			}
 			// listCWL.write(pWL + "\t");
 
 			// if (listNodeReq.contains(n)) {
 			// listCWL.write("\n" + t + "\t" + n.getId() + "\t" + n.getcWL());
 			// if (n.getcWL()>0) {n.setcWL(0);}
 			// }
-
 		}
 	}
 
@@ -713,6 +732,42 @@ public class MainSim {
 		}
 	}
 
+	private static void updateQCloud(List<NodeCloud> topoCloud, double ts) {
+		// System.out.println("\nUPDATE QUEUE");
+		for (NodeCloud n : topoCloud) {
+			boolean check = true;
+			while (check && (n.getqReq().peek() != null)) { // còn queue
+				RequestCloud rv = (RequestCloud) n.getqReq().peek();
+				double start1 = rv.getStart();
+				double end1 = rv.getEnd();
+				// System.out.print("Node: " + n.getName());
+				// System.out.println(" REQ: " + start1 + " -> " + end1);
+				check = false;
+				if (end1 < ts) {
+					n.getqReq().peek().setDone(true);
+					n.getDoneReq().add(n.getqReq().peek()); // adding to done req
+					// System.out.println("doneREQ: " + n.getqReq().peek().getStart() + " -> " +
+					// end1);
+					n.getqReq().remove(); // req is done, removing
+					RequestCloud nextReq = (RequestCloud) n.getqReq().peek(); // update next
+					// request if data sent
+					if (nextReq != null) {
+						if (end1 > nextReq.getStart()) {
+							// System.out.println("update next req start at: " + end1);
+							((RequestCloud) n.getqReq().peek()).setStart(end1); // start after === end
+							// before
+							((RequestCloud) n.getqReq().peek())
+									.setEnd(end1 + ((RequestCloud) n.getqReq().peek()).getTimeProcess());
+							check = true;
+						} else if (end1 < nextReq.getStart() && nextReq.getStart() < ts) {
+							check = true;
+						}
+					}
+				}
+			}
+		}
+	}
+
 	private static void insertQ(List<NodeVehicle> topo, List<RTable> rtable, int t) {
 		// System.out.println("\nCALC assigned new workload and ADD new reqs to queue");
 
@@ -745,7 +800,7 @@ public class MainSim {
 
 					RequestVehicle rv = new RequestVehicle(rq.getId(), rq.getWL(), rq.getSrcNode(), rq.getTimeInit(),
 							rq.isDone(), n.getId(), r.getRoute(), start, t_process, r.getRatio(), r.getTimeTrans(),
-							start, (start + t_process), r.getTimeSer(), move_data);
+							start, (start + t_process + r.getTimeTrans()), r.getTimeSer(), move_data);
 					// timeArrival == start end = start + t_process
 
 					n.getqReq().add(rv); // nhận req đến hàng đợi
@@ -755,7 +810,7 @@ public class MainSim {
 						double dtVR = 0;
 						// dt from V to R (fix 1hop and same BW)
 						// need increase BW (V-R)
-						dtVR = r.getRatio() * r.getReq().getWL() / Constants.BW; // time move to RSU
+						dtVR = r.getRatio() * r.getReq().getWL() / Constants.BW; // time move Vehicle to RSU
 						RequestRSU rr = new RequestRSU(rv);
 						rr.setTimeVR(dtVR);
 						// System.out.println(rv.getTimeArrival());
@@ -779,9 +834,9 @@ public class MainSim {
 		System.out.println("\ninsertQRSU");
 
 		for (NodeRSU n : topoRSU) {
-			n.getqReqV().clear(); // remove all reqs from vehicle
+			n.getqReqV().clear(); // remove all reqs from RSU
 			double aWL = 0; // all assigned workload as new-workload
-			boolean check = false;
+			boolean check = true;
 			for (RTable r : rtable) {
 				double move_data = 0;
 				if (r.getDes().equals(n.getName())) {
@@ -792,6 +847,14 @@ public class MainSim {
 						// adding queue
 						double start = r.getTimeTrans() + (t - 1) * TS;
 						start += rq.getTimeVR();
+						move_data = aWL - Constants.RES[Constants.TYPE.RSU.ordinal()];
+
+						if (move_data > 0) {
+							t_process = 1;
+							aWL = Constants.RES[Constants.TYPE.RSU.ordinal()];
+						} else {
+							move_data = 0;
+						}
 
 						rq.setRatio(r.getRatio());
 						rq.setStart(start);
@@ -801,27 +864,76 @@ public class MainSim {
 						rq.setTimeTrans(r.getTimeTrans());
 						rq.setTimeSer(r.getTimeSer());
 						rq.setRoute(r.getRoute());
+						rq.setMovedDataRSU(move_data);
+
 						n.getqReq().add(rq);
 
-						System.out.println("Insert to: " + n.getName() + " <- " + rq.toString());
-						n.getqReq().forEach(nqr -> System.out.println(n.getName() + " : " +
-								nqr.toString()));
+						double dtRC = 0;
+						// dt from R to C
+						dtRC = move_data / Constants.BW1[2]; // time move to RSU
+						RequestCloud rc = new RequestCloud(rq);
+						rc.setRatio(rq.getRatio());
+						rc.setStart(start);
+						rc.setTimeArrival(start);
+						rc.setTimeProcess(t_process);
+						rc.setEnd(start + t_process);
+						rc.setTimeTrans(rq.getTimeTrans());
+						rc.setTimeSer(rq.getTimeSer());
+						rc.setRoute(r.getRoute());
+						rc.setMovedData(move_data);
+						rc.setTimeRC(dtRC);
+
 					}
-					check = true;
+
+					// moving RSU to Cloud
+
 				}
+				check = false;
 			}
-
 			n.setaWL(n.getaWL() + aWL);
-
-			// n.getqReq().forEach(nqr->System.out.println(n.getName() + " : " +
-			// nqr.toString()));
 		}
 
-		// System.out.println("TEST AFTER INSERT: ");
-		// for (NodeRSU n : topoRSU) {
 		// n.getqReq().forEach(nqr->System.out.println(n.getName() + " : " +
 		// nqr.toString()));
-		// }
+	}
+
+	private static void insertQCloud(List<NodeCloud> topoCloud, List<RTable> rtable, int t) {
+		for (NodeCloud n : topoCloud) {
+			System.out.println("Debug");
+			System.out.println("____________________________" + n.getName() + "\n");
+			n.getqReqV().clear(); // remove all reqs from Cloud
+			double aWL = 0; // all assigned workload as new-workload
+			boolean check = false;
+			for (RTable r : rtable) {
+				double move_data = 0;
+				RequestCloud rq = (RequestCloud) r.getReq();
+				aWL += r.getRatio() * r.getReq().getWL();
+				double t_process = r.getRatio() * r.getReq().getWL() / r.getResource();
+				// adding queue
+				double start = r.getTimeTrans() + (t - 1) * TS;
+				start += rq.getTimeRC();
+
+				rq.setRatio(r.getRatio());
+				rq.setStart(start);
+				rq.setTimeArrival(start);
+				rq.setTimeProcess(t_process);
+				rq.setEnd(start + t_process);
+				rq.setTimeTrans(r.getTimeTrans());
+				rq.setTimeSer(r.getTimeSer());
+				rq.setRoute(r.getRoute());
+				n.getqReq().add(rq);
+
+				System.out.println("Debug");
+				System.out.println("____________________________" + rq.getId() + "\t" + rq.getMovedData() + "\t"
+						+ rq.getRatio());
+
+				// System.out.println("Insert to: " + n.getName() + " <- " + rq.toString());
+				// n.getqReq().forEach(nqr -> System.out.println(n.getName() + " : " +
+				// nqr.toString()));
+
+				check = false;
+			}
+		}
 	}
 
 	private static void calcTSerPSO(List<RTable> rtable, int testCase) {
@@ -846,7 +958,7 @@ public class MainSim {
 				}
 			}
 
-			trans = (r.getRatio() * workLoad / Constants.BW) * r.getHop();
+			trans = (r.getRatio() * workLoad / Constants.BW1[0]) * r.getHop();
 
 			if (r.getId() == 0) {
 				trans = 0;
@@ -855,7 +967,6 @@ public class MainSim {
 
 			r.setTimeCompute(compute);
 			r.setTimeTrans(trans);
-
 			double ser = compute + trans;
 			r.setTimeSer(ser);
 
@@ -887,7 +998,7 @@ public class MainSim {
 				}
 			}
 
-			trans = (r.getRatio() * workLoad / Constants.BW) * r.getHop();
+			trans = (r.getRatio() * workLoad / Constants.BW1[1]) * r.getHop(); // RSU to RSU
 
 			if (r.getId() == 0) {
 				trans = 0;
@@ -907,102 +1018,47 @@ public class MainSim {
 
 	}
 
+	private static void calcTSerCloud(List<RTable> rtable, int testCase) {
+		// 3.1 t_ser based PSO in rtable
+		for (RTable r : rtable) {
+			double compute = 0;
+			double trans = 0;
+			double workLoad = r.getReq().getWL();
+			double subWL = r.getRatio() * workLoad; // new WL
+			double totalWL = subWL + r.getcWL(); // adding cWL
+			compute = totalWL / r.getResource(); // totalTime
+
+			if (testCase != 2) {
+				// calc t_process for all paths to node ~ including t_wait
+				for (RTable r2 : rtable) {
+					if (r2.getDes().equals(r.getDes())
+							&& (r2.getId() != r.getId() || (r2.getReq().getId() != r.getReq().getId()))) {
+						// adding route 2hop-2path
+						compute += r2.getRatio() * r2.getReq().getWL() / r2.getResource();
+						subWL += r2.getRatio() * r2.getReq().getWL(); // adding newWL route2
+					}
+				}
+			}
+
+			trans = (r.getRatio() * workLoad / Constants.BW1[2]) * r.getHop();
+
+			if (r.getId() == 0) {
+				trans = 0;
+			}
+			;
+
+			r.setTimeCompute(compute);
+			r.setTimeTrans(trans);
+			double ser = compute + trans;
+			r.setTimeSer(ser);
+
+		} // END 3.1: LOG TIME IN RTABLE
+
+	}
+
 	private static void debug(String s, boolean mode) {
 		if (mode)
 			System.out.println(s);
 	}
 
-	private static void updateCWLCloud(List<NodeCloud> topoCloud, double ts) {
-		// TODO when multi cloud
-	}
-
-	private static void updateCloud(List<NodeCloud> topoCloud, double ts) {
-		// TODO when multi cloud
-	}
-
-	// private static void insertQCloud(List<NodeRSU> topoCloud, List<RTable>
-	// rtable, int t) {
-	// for (NodeRSU n : topoCloud) {
-	// n.getqReqV().clear(); // remove all reqs from vehicle
-	// double aWL = 0; // all assigned workload as new-workload
-	// boolean check = false;
-	// for (RTable r : rtable) {
-	// double move_data = 0;
-	// if (r.getDes().equals(n.getName())) {
-	// RequestCloud rq = (RequestCloud) r.getReq();
-	// if (r.getRatio() == 1) {
-	// aWL += r.getRatio() * r.getReq().getWL();
-	// double t_process = r.getRatio() * r.getReq().getWL() / r.getResource();
-	// // adding queue
-	// double start = r.getTimeTrans() + (t - 1) * TS;
-	// start += rq.getTimeVR();
-
-	// rq.setRatio(r.getRatio());
-	// rq.setStart(start);
-	// rq.setTimeArrival(start);
-	// rq.setTimeProcess(t_process);
-	// rq.setEnd(start + t_process);
-	// rq.setTimeTrans(r.getTimeTrans());
-	// rq.setTimeSer(r.getTimeSer());
-	// rq.setRoute(r.getRoute());
-	// n.getqReq().add(rq);
-
-	// System.out.println("Insert to: " + n.getName() + " <- " + rq.toString());
-	// n.getqReq().forEach(nqr -> System.out.println(n.getName() + " : " +
-	// nqr.toString()));
-	// }
-	// check = true;
-	// }
-	// }
-	// }
-
-	private static void calcTserCLoud(List<RTable> rtable, int testCase) {
-		// for (RTable r : rtable) {
-		// double compute = 0;
-		// double trans = 0;
-		// double trans_rv = 0;
-		// double workLoad = r.getReq().getWL();
-		// double subWL = r.getRatio() * workLoad; // new WL
-		// double totalWL = subWL + r.getcWL(); // adding cWL
-		// compute = totalWL / r.getResource(); // totalTime
-
-		// if (testCase != 2) {
-		// // calc t_process for all paths to node ~ including t_wait
-		// for (RTable r2 : rtable) {
-		// if (r2.getDes().equals(r.getDes())
-		// && (r2.getId() != r.getId() || (r2.getReq().getId() != r.getReq().getId())))
-		// {
-		// // adding route 2hop-2path
-		// compute += r2.getRatio() * r2.getReq().getWL() / r2.getResource();
-		// subWL += r2.getRatio() * r2.getReq().getWL(); // adding newWL route2
-
-		// }
-		// }
-		// }
-
-		// trans = (r.getRatio() * workLoad / Constants.BW1[2]) * r.getHop();
-
-		// if (r.getId() == 0) {
-		// trans = 0;
-		// }
-		// ;
-
-		// // trans += rr.getTimeVR(); // adding time trans VR
-
-		// r.setTimeCompute(compute);
-		// r.setTimeTrans(trans);
-
-		// double ser = compute + trans;
-		// r.setTimeSer(ser);
-		// }
-
-		// private static double CalcTserAll(List<RequestVehicle> req, int testCase) {
-		// double Tser = 0;
-		// for (RequestVehicle r : req) {
-		// if (Tser < r.getTimeSer()) {
-		// Tser = r.getTimeSer();
-		// }
-		// }
-		// return Tser;
-	}
 }

@@ -23,7 +23,7 @@ public class TrafficUtils {
 		int[] data = { 24, 30, 60, 200, 500 };
 		int DATA = 0;
 		// int[] fixedNode = { 6, 0, 5 };
-		int[] fixedNode = { 1, 4, 3 };
+		int[] fixedNode = { 6, 9, 8 };
 
 		int idReq = 1;
 		for (int n = 0; n < fixedNode.length; n++) {
