@@ -12,7 +12,6 @@ import java.util.Set;
 import multihop.Constants;
 import multihop.LogPSO;
 import multihop.RTable;
-import multihop.request.RequestRSU;
 
 class PSOFunction {
 
@@ -23,127 +22,6 @@ class PSOFunction {
 	public PSOFunction(int nodes, int testCase) {
 		this.nodes = nodes;
 		this.testCase = testCase;
-
-	}
-
-	public PSOVector multiFunctionRSU(PSOParticleRSU p, List<RTable> rtable,
-			HashMap<Integer, List<RTable>> mapRTable) {
-
-		/**
-		 * @param workLoad        number of images from 1 service
-		 * @param p               percent workload
-		 * @param Theta           share service or not ( 0 or 1)
-		 * @param currentWorkload current workload at that node
-		 * @return total time
-		 */
-
-		int workLoad;
-		String pid = p.getName();
-		PSOVector time = new PSOVector(p.getPosition().getDim()); // create a new psoVector same value
-		PSOVector ratio = p.getPosition().getVectorRatio(); // ratio, get p of PSO vector
-
-		double CWL = 0;
-
-		if (testCase == 2) {
-			// calc t_compute (none- t_wait)
-			int jj = 0;
-			for (RTable r : rtable) {
-				workLoad = (int) r.getReq().getWL();
-				double t_compute = 0;
-				double subWL = ratio.getById(jj) * workLoad; // new WL
-				double totalWL = subWL + r.getcWL(); // adding cWL
-				t_compute = totalWL / r.getResource();
-				r.setTimeCompute(t_compute);
-
-				jj++;
-			}
-		} else {
-			/**
-			 * calc t_compute (include t_wait) output: TimeCompute, CWL
-			 */
-			List<String> check = new ArrayList<String>();
-			int j = 0;
-			for (RTable r : rtable) {
-				workLoad = (int) r.getReq().getWL();
-				double t_compute = 0;
-				double subWL = ratio.getById(j) * workLoad; // new WL
-				double totalWL = subWL + r.getcWL(); // adding cWL
-				t_compute = totalWL / r.getResource();
-
-				if (!check.contains(r.getDes())) {
-
-					List<Integer> r2Id = new ArrayList<Integer>();
-					int j2 = 0;
-					for (RTable r2 : rtable) {
-						if ((r2.getDes().equals(r.getDes()))
-								&& (r2.getId() != r.getId() || (r2.getReq().getId() != r.getReq().getId()))) {
-							r2Id.add(j2);
-							t_compute += ratio.getById(j2) * r2.getReq().getWL() / r2.getResource();
-
-						}
-						j2++;
-					}
-
-					for (Integer i : r2Id) {
-						rtable.get(i).setTimeCompute(t_compute);
-					}
-					r.setTimeCompute(t_compute);
-				}
-				check.add(r.getDes());
-				j++;
-			}
-		}
-
-		// Adding tran
-		int j2 = 0;
-		double TMAX = 0;
-
-		for (RTable r : rtable) {
-
-			double t_trans;
-
-			t_trans = (ratio.getById(j2) * r.getReq().getWL() / Constants.BW) * r.getHop();
-			if (r.getId() == 0)
-				t_trans = 0;
-
-			RequestRSU rr = (RequestRSU) r.getReq();
-			t_trans += rr.getTimeVR(); // adding time trans VR
-
-			r.setTimeTrans(t_trans);
-			// position.setById(j, r.getTimeTrans() + r.getTimeCompute());
-
-			TMAX = r.getReq().getWL() / Constants.RES[Constants.TYPE.RSU.ordinal()];
-
-			time.setById(j2, (r.getTimeCompute() + r.getTimeTrans()) / TMAX);
-			j2++;
-		}
-
-		// System.out.println(pid+ " Time calc in func: \n" + time.toStringOutput());
-
-		int j3 = 0;
-		for (RTable r : rtable) {
-			TMAX = r.getReq().getWL() / Constants.RES[Constants.TYPE.RSU.ordinal()];
-			double check1 = (r.getTimeCompute() + r.getTimeTrans()) / TMAX - time.getById(j3);
-			// System.out.println("rtable: " + j3 + " " + r.getTimeCompute());
-			if (check1 != 0) {
-				System.out.println("Fail: " + j3 + " " + r.getDes() + " " + check1);
-				// System.out.println(worker.toStringOutput());
-
-			}
-
-			j3++;
-		}
-		// System.out.println(worker.toStringOutput());
-		//
-		int totalworkLoad = 0;
-
-		List<String> f2 = new ArrayList<String>();
-		f2.add(constraintF2(time, pid, ratio));
-		// constraintF5(totalworkLoad, time, pid, rtable, ratio, mapRTable, testCase,
-		// p);
-		// constraintF6(totalworkLoad, time, CWL, rtable, ratio, mapRTable, testCase);
-
-		return time;
 
 	}
 
@@ -208,6 +86,7 @@ class PSOFunction {
 				double subWL = ratio.getById(j) * workLoad; // new WL
 				double totalWL = subWL + r.getcWL(); // adding cWL
 				t_compute = totalWL / r.getResource();
+
 				if (!check.contains(r.getDes())) {
 
 					List<Integer> r2Id = new ArrayList<Integer>();
@@ -249,6 +128,7 @@ class PSOFunction {
 			TMAX = r.getReq().getWL() / Constants.RES[Constants.TYPE.VEHICLE.ordinal()];
 
 			time.setById(j2, (r.getTimeCompute() + r.getTimeTrans()) / TMAX);
+
 			j2++;
 		}
 
@@ -260,7 +140,7 @@ class PSOFunction {
 			double check1 = (r.getTimeCompute() + r.getTimeTrans()) / TMAX - time.getById(j3);
 			// System.out.println("rtable: " + j3 + " " + r.getTimeCompute());
 			if (check1 != 0) {
-				System.out.println("Fail: " + j3 + " " + r.getDes() + " " + check1);
+				// System.out.println("Fail: " + j3 + " " + r.getDes() + " " + check1);
 				// System.out.println(worker.toStringOutput());
 
 			}
@@ -268,7 +148,7 @@ class PSOFunction {
 			j3++;
 		}
 		// System.out.println(worker.toStringOutput());
-		//
+
 		int totalworkLoad = 0;
 		// for (Integer id : mapRTable.keySet()) {
 		// totalworkLoad += mapRTable.get(id).get(0).getReq().getWL();
@@ -328,7 +208,6 @@ class PSOFunction {
 			}
 		}
 		return null;
-
 	}
 
 	static PSOVector constraintF5(int workLoad, PSOVector time, String pid, List<RTable> rtable, PSOVector ratio,
@@ -535,7 +414,7 @@ class PSOFunction {
 			// System.out.println("checkSum = " + checkSum + " " + check);
 
 			if (Math.abs(check) > 1) {
-				System.out.println("F1 = " + checkSum + " " + check);
+				// System.out.println("F1 = " + checkSum + " " + check);
 				return true;
 			}
 			;
@@ -560,34 +439,6 @@ class PSOFunction {
 		return false;
 	}
 
-	public static boolean constraintF1(PSOParticleRSU p, HashMap<Integer, List<RTable>> mapRTable) {
-		int j = 0;
-		Set<Integer> keySet = mapRTable.keySet();
-		List<Integer> sortedList = new ArrayList<>(keySet);
-		Collections.sort(sortedList);
-
-		for (Integer id : sortedList) { // req 0, 1
-			double checkSum = 0;
-
-			List<RTable> rTable = mapRTable.get(id);
-
-			for (int i = 0; i < rTable.size(); i++) {
-				checkSum += p.getPosition().getById(j);
-				j++;
-			}
-			int check = (int) (checkSum * (10000)) - 10000;
-			// System.out.println("checkSum = " + checkSum + " " + check);
-
-			if (Math.abs(check) > 1) {
-				System.out.println("F1 = " + checkSum + " " + check);
-				return true;
-			}
-			;
-
-		}
-		return false;
-	}
-
 	/**
 	 * pi*W <= (W + sum(N)) / n
 	 * 
@@ -600,39 +451,41 @@ class PSOFunction {
 	 * @return true if not satisfy
 	 */
 
-	static PSOVector constraintF5(int workLoad, PSOVector time, String pid, List<RTable> rtable, PSOVector ratio,
-			HashMap<Integer, List<RTable>> mapRTable, int testCase, PSOParticleRSU p) {
-		int j = 0;
-		double check = 9999;
-		for (RTable r : rtable) {
-			double pai = ratio.getById(j);
-			double lambWL = r.getResource() / r.getReq().getWL();
+	// static PSOVector constraintF5(int workLoad, PSOVector time, String pid,
+	// List<RTable> rtable, PSOVector ratio,
+	// HashMap<Integer, List<RTable>> mapRTable, int testCase, PSOParticleRSU p) {
+	// int j = 0;
+	// double check = 9999;
+	// for (RTable r : rtable) {
+	// double pai = ratio.getById(j);
+	// double lambWL = r.getResource() / r.getReq().getWL();
 
-			double pen = pai - lambWL;
+	// double pen = pai - lambWL;
 
-			if (!r.getDes().equals(r.getReq().getSrcNode().getName())) { // khong xet req node trong dieu kien nay
-				// pen = pai - lambWL;
-				if (pen > 0) {
-					pen = INFINITY;
-					time.setById(j, time.getById(j) + pen);
-					check = j;
-				}
-			}
-			// addPen += pen;
-			j++;
+	// if (!r.getDes().equals(r.getReq().getSrcNode().getName())) { // khong xet req
+	// node trong dieu kien nay
+	// // pen = pai - lambWL;
+	// if (pen > 0) {
+	// pen = INFINITY;
+	// time.setById(j, time.getById(j) + pen);
+	// check = j;
+	// }
+	// }
+	// // addPen += pen;
+	// j++;
 
-		}
+	// }
 
-		if (check != 9999) {
-			LogPSO log = LogPSO.getInstance();
-			log.log("\tF3." + j + "\t");
-			// log.log("\n" +worker.toStringOutput() + "\n");
-		}
+	// if (check != 9999) {
+	// LogPSO log = LogPSO.getInstance();
+	// log.log("\tF3." + j + "\t");
+	// // log.log("\n" +worker.toStringOutput() + "\n");
+	// }
 
-		for (int i = 0; i < time.getDim(); i++) {
-			// postion.setById(i, postion.getById(i)+ addPen);
-		}
+	// for (int i = 0; i < time.getDim(); i++) {
+	// // postion.setById(i, postion.getById(i)+ addPen);
+	// }
 
-		return time;
-	}
+	// return time;
+	// }
 }

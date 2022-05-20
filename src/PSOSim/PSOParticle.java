@@ -48,28 +48,27 @@ class PSOParticle {
         setRandomPosition();
         configRandom();
         bestPosition = position.clone();
+        // System.out.println(bestPosition.toStringOutput());
     }
 
     private void configRandom() {
     	int j=0;
-    	
     	Set<Integer> keySet= mapRTable.keySet();
     	List<Integer> sortedList = new ArrayList<>(keySet);
-    	Collections.sort(sortedList);
+    	Collections.sort(sortedList);   // 11 11 11 ... - 12 12 12 ... - ....
     	
-    	for (Integer id:sortedList) { // req 0, 1
-    		// System.out.println("id: " + id);
+    	for (Integer id : sortedList) { // req 0, 1
     		List<RTable> rTableMap = mapRTable.get(id);  // rtable of req 0  		
 			double compensation = 0;
 			double sumOther =1;
 			int idSelf = j;
-    		for(RTable r:rTableMap) {
+    		for(RTable r : rTableMap) {
     			double pai = position.getById(j);
-    			double lambWL = r.getResource() / r.getReq().getWL();
+    			double lambWL = r.getResource() / r.getReq().getWL();   // = 0.06
     			double pen = pai-lambWL;
     			if (!r.getDes().equals(r.getReq().getSrcNode().getName())) {
-    				if (pen > 0) {
-    					pai = lambWL;
+    				if (pen > 0) {     // nếu des req != src req && pen > 0     // ko gửi về chính nó
+    					pai = lambWL / r.getsameDes();
     					position.setById(j, pai);
     					compensation +=pen;
     				}
@@ -97,25 +96,25 @@ class PSOParticle {
     	Collections.sort(sortedList);
     	
     	for (Integer id : sortedList) { // req 0, 1
+    		List<RTable> rTableMap = mapRTable.get(id);    		
 
-    		List<RTable> rTableMap = mapRTable.get(id);
-    		
     		HashMap<String, Integer> paths = PSOUtils.getPahts(rTableMap);
-    		
-    		int len = paths.size();
-    		double[] randP = PSOUtils.getRandP(len); 
+                // {V0=1, V1=1, V5=1}
+                // {V7=1, V1=1, V2=1, V3=1}
+    		int len = paths.size(); // = 3 4 3 4 ...
+    		double[] randP = PSOUtils.getRandP(len);
     		HashMap<String, Double> ratios = new HashMap<String, Double>();
     		
     		int irandP=0;
-    		for (String ipath:paths.keySet()) {
+    		for (String ipath:paths.keySet()) {     // put randP in ratio
     			ratios.put(ipath, randP[irandP]);
-    			//ratios.put(ipath, 1.0/len);
+    			// ratios.put(ipath, 1.0/len);
     			irandP++;
     		}
-    		for(RTable r:rTableMap) {
+    		for(RTable r : rTableMap) {
     			if(paths.get(r.getDes())==1){
     				position.setById(j,ratios.get(r.getDes()));
-    			}else {
+    			}else { // == 0
     				position.setById(j,ratios.get(r.getDes())/paths.get(r.getDes()));
     			}
     			// System.out.println("Process: " + j + " Des: " + r.getDes() + " Path: " + paths.get(r.getDes())  );

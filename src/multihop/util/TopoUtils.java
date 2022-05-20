@@ -8,13 +8,12 @@ import java.util.Vector;
 import multihop.Constants;
 import multihop.RTable;
 import multihop.node.NodeBase;
-import multihop.node.NodeRSU;
+
 import multihop.node.NodeVehicle;
-import multihop.node.NodeCloud;
+
 import multihop.request.RequestBase;
-import multihop.request.RequestRSU;
+
 import multihop.request.RequestVehicle;
-import multihop.request.RequestCloud;
 
 public class TopoUtils {
 
@@ -39,13 +38,6 @@ public class TopoUtils {
 								Constants.RANGE[type],
 								Constants.RES[type]);
 						break;
-					case 1:
-						node = new NodeRSU(id, "R" + String.valueOf(id), j * space, i * space, Constants.RANGE[type],
-								Constants.RES[type]);
-						break;
-					case 2:// 1-cloud
-						node = new NodeCloud(id, "R" + String.valueOf(id), j * space, i * space, Constants.RANGE[type],
-								Constants.RES[type]);
 					default:
 						System.out.println("ERR-TYPE of nodes");
 						break;
@@ -127,6 +119,11 @@ public class TopoUtils {
 				v[i] = v[i - 1];
 				n.setVelo(v);
 
+				if (x[i] < 0 || x[i] >= 50 || y[i] < 0 || y[i] >= 50) {
+					x[i] = x[0];
+					y[i] = y[0];
+				}
+
 			}
 
 			n.setX(x);
@@ -140,58 +137,6 @@ public class TopoUtils {
 	 * @param topo = list node
 	 * @return topo = list node adding neighbour node/ nodelk
 	 */
-
-	public static void setupTopo(List<NodeVehicle> topo, List<NodeRSU> topoRSU) {
-
-		for (NodeVehicle node : topo) {
-			for (int i = 0; i < Constants.TSIM; i++) {
-				Vector<NodeVehicle> neighNode = new Vector<NodeVehicle>();
-
-				for (NodeVehicle nodec : topo)
-					if ((node.checkLK(nodec, i)) && (node.getId() != nodec.getId()))
-						neighNode.add(nodec);
-
-				node.getNodeNeighbor().add(i, neighNode);
-			}
-		}
-
-		for (NodeVehicle node : topo) {
-			for (int i = 0; i < Constants.TSIM; i++) {
-				Vector<NodeRSU> pNode = new Vector<NodeRSU>();
-
-				for (NodeRSU nodep : topoRSU)
-					if (node.checkLK(node, i, nodep))
-						pNode.add(nodep);
-
-				node.getNodeParent().add(pNode);
-			}
-		}
-
-	}
-
-	public static void setupTopoRSU(List<NodeRSU> topoRSU, List<NodeVehicle> topo) {
-		for (NodeRSU node : topoRSU) {
-			// adding nodeLK as child-node of RSU
-			for (int i = 0; i < Constants.TSIM; i++) {
-				Vector<NodeVehicle> neighNode = new Vector<NodeVehicle>();
-				for (NodeVehicle nodec : topo) { // for in topo-vehicle
-					if (node.checkLK(nodec, i)) { // just check range, don't check id
-						neighNode.add(nodec);
-					}
-				}
-				node.getNodeChild().add(i, neighNode);
-			}
-
-			// adding nodeLKRSU as RSU-neigbour-node
-			// Vector<Node> neighNodeRSU = new Vector<Node>();
-			for (NodeRSU nodec : topoRSU) {
-				if ((node.checkLK(nodec)) && (node.getId() != nodec.getId())) {
-					node.getNodeNeigbour().add(nodec);
-				}
-			}
-		}
-
-	}
 
 	/**
 	 * @param i - timeslot
@@ -273,62 +218,19 @@ public class TopoUtils {
 		// TODO Auto-generated constructor stub
 	}
 
-	public static List<RTable> createRoutingTableRSU(List<NodeRSU> topoRSU, RequestRSU req,
-			List<NodeRSU> listNodeReqRSU, int hc, boolean single, int i) {
-		// diff: dont except req node (eg: R0 has req, R1 also assigns to R0)
+	public static void setupTopo(List<NodeVehicle> topo) {
 
-		List<RTable> rtable = new ArrayList<RTable>(); // rtable of a request
+		for (NodeVehicle node : topo) {
+			for (int i = 0; i < Constants.TSIM; i++) {
+				Vector<NodeVehicle> neighNode = new Vector<NodeVehicle>();
 
-		// adding root of req: reqID as name and
-		i = i - 1;
-		NodeRSU root = req.getSrcNodeRSU();
-		rtable.add(0, new RTable(0, root.getName(), root.getName(), 0, root.getRes(), req));
+				for (NodeVehicle nodec : topo)
+					if ((node.checkLK(nodec, i)) && (node.getId() != nodec.getId()))
+						neighNode.add(nodec);
 
-		int id = 1;
-
-		for (NodeRSU n1 : root.getNodeNeigbour()) {
-			n1.setLvl(1);
-			rtable.add(id, new RTable(id, n1.getName(), root.getName(), 1, n1.getRes(), req));
-			rtable.get(id).setNpath(1);
-			id++;
-		}
-
-		// update cWL of node to routing table
-		for (RTable r : rtable) {
-			for (NodeRSU t : topoRSU) {
-				if (t.getName().equals(r.getDes())) {
-					r.setcWL(t.getCWL());
-					// System.out.println("Adding r: " + r.toString() + " " +r.getcWL());
-				}
+				node.getNodeNeighbor().add(i, neighNode);
 			}
 		}
-
-		return rtable;
-
-	}
-
-	public static List<RTable> createRoutingTableCloud(List<NodeCloud> topoCloud, RequestCloud req,
-			List<NodeCloud> listNodeReqCloud, int hc, boolean single, int i) {
-		// diff: dont except req node (eg: R0 has req, R1 also assigns to R0)
-
-		List<RTable> rtable = new ArrayList<RTable>(); // rtable of a request
-
-		// adding root of req: reqID as name and
-		i = i - 1;
-		NodeCloud root = req.getSrcNodeCloud();
-		rtable.add(0, new RTable(0, root.getName(), root.getName(), 0, root.getRes(), req));
-
-		// update cWL of node to routing table
-		for (RTable r : rtable) {
-			for (NodeCloud t : topoCloud) {
-				if (t.getName().equals(r.getDes())) {
-					r.setcWL(t.getCWL());
-					// System.out.println("Adding r: " + r.toString() + " " +r.getcWL());
-				}
-			}
-		}
-
-		return rtable;
 
 	}
 

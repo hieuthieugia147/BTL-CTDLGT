@@ -25,7 +25,6 @@ public class NodeVehicle extends NodeBase {
 	double aWL = 0; // assigned workload
 
 	Vector<Vector<NodeVehicle>> nodeNeighbor = new Vector<Vector<NodeVehicle>>();
-	Vector<Vector<NodeRSU>> nodeParent = new Vector<Vector<NodeRSU>>();
 
 	Queue<RequestVehicle> qReq = new PriorityQueue<RequestVehicle>();
 
@@ -41,28 +40,8 @@ public class NodeVehicle extends NodeBase {
 		return false;
 	}
 
-	public boolean checkLK(NodeVehicle a, int i, NodeRSU b) {
-		double ax = a.getX()[i];
-		double ay = a.getY()[i];
-		double bx = b.getLat();
-		double by = b.getLng();
-		double k = (bx - ax) * (bx - ax) + (by - ay) * (by - ay);
-		if (k <= RANGE) {
-			return true;
-		}
-		return false;
-	}
-
 	public String toString() {
 		return name + ": x= " + lat + " , y = " + lng;
-	}
-
-	public Vector<Vector<NodeRSU>> getNodeParent() {
-		return nodeParent;
-	}
-
-	public void setNodeParent(Vector<Vector<NodeRSU>> nodeParent) {
-		this.nodeParent = nodeParent;
 	}
 
 	public Queue<RequestVehicle> getqReq() {

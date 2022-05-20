@@ -23,7 +23,7 @@ public class Constants {
 																				// R2C
 
 	// Resource is process capacity of Node. t_process = RES * WL.
-	public final static double[] RES = { 1 / 0.033, 10 / 0.033, 100 / 0.033 };
+	public final static double[] RES = { 30, 300, 3000 };
 	// public final static double LAMBDA = 1/RES;
 
 	// pso prames
@@ -31,8 +31,8 @@ public class Constants {
 	public final static int epchos = 1000;
 
 	// REQ prams
-	public final static int NUM_REQ = 20; // rate *100
-	public final static int TSIM = 20; // simulation time
+	public final static int NUM_REQ = 100; // rate *100
+	public final static int TSIM = 150; // simulation time = 1.5*num req
 	public final static int TS = 1; // 1ts = 1s
 
 	public final static int MAXHOP = 1;

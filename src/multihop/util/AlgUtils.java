@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import PSOSim.PSOSwarm;
-import PSOSim.PSOSwarmRSU;
 import PSOSim.PSOVector;
 import multihop.Constants;
 import multihop.RTable;
@@ -26,26 +25,6 @@ public class AlgUtils {
 		Map<Integer, Double> ratio = swarm.run("service-id-string");
 
 		result = (HashMap<Integer, Double>) ratio;
-
-		return result;
-	}
-
-	public static HashMap<Integer, Double> getPSORSU(List<RTable> rtable, HashMap<Integer, List<RTable>> mapRTable,
-			int testCase, double ts) {
-		HashMap<Integer, Double> result = new HashMap<Integer, Double>();
-		int particles = Constants.particles;
-		int epchos = Constants.epchos;
-		int dim = rtable.size();
-		; // number of nodes/dimenssion
-
-		if (dim > 0) {
-			PSOSwarmRSU swarm = new PSOSwarmRSU(particles, epchos, dim, rtable, mapRTable, testCase);
-			System.out.println("Running PSO in RSU ts = " + ts);
-			Map<Integer, Double> ratio = swarm.run("service-id-string");
-			result = (HashMap<Integer, Double>) ratio;
-		} else {
-			System.out.println("NO REQ FROM VEHICLE -> RSU");
-		}
 
 		return result;
 	}

@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Random;
+import java.util.ArrayList;
 
 import multihop.Constants;
 import multihop.node.NodeVehicle;
@@ -20,10 +22,11 @@ public class TrafficUtils {
 
 		Queue<RequestBase> reqPiority = new PriorityQueue<RequestBase>(); // store req by time and id
 
-		int[] data = { 24, 30, 60, 200, 500 };
+		int[] data = { 24, 30, 40, 60, 80 };
 		int DATA = 0;
 		// int[] fixedNode = { 6, 0, 5 };
-		int[] fixedNode = { 6, 9, 8 };
+		// int[] fixedNode = { 6, 9, 8, 14, 20 };
+		int[] fixedNode = { 1, 4, 5, 6, };
 
 		int idReq = 1;
 		for (int n = 0; n < fixedNode.length; n++) {
@@ -34,7 +37,9 @@ public class TrafficUtils {
 				if (idNode == 6) {
 					wl = data[4];
 				} else {
-					wl = data[4];
+					Random generator = new Random();
+					int ia = generator.nextInt(5);
+					wl = data[ia];
 				}
 				// if (idNode == 6) {wl = data[3];} else {wl = data[3];}
 				reqPiority.add(new RequestBase(idReq, wl, topo.get(idNode), reqTime, false));

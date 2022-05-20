@@ -34,14 +34,12 @@ public class PSOVector {
     	for(int i=0; i<v.length; i++){
         	this.p[i] = v[i];
         }
-    	
     }
 
     // get p value by index
     double getById (int id) {
         return this.p[id];
     }
-
 
     // set value to p
     public void set (double[] v) {
@@ -143,11 +141,9 @@ public class PSOVector {
     	String output = "";
     	for(int i=0; i<p.length; i++){
     		output += "p"+i+" : " + p[i] + "\t";
-    		// output +=p[i] + "\t";
     	}
         return output;
     }
-    
     
     public double[] getVectorCoordinate(){
     	return p;
