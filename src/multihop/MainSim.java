@@ -113,10 +113,10 @@ public class MainSim {
 					myWriterPSO.write("\n" + testCase + "," + hc + "," + single + "," + "\n");
 
 					fListReq.write("\n" + testCase + "." + hc + "." + single + "\n");
-					myWriterPSO.write("Test case" + ",\t" + "TSIM" + ",\t" + "Workload" + ",\t" + "\n");
-					myWriterPSO.write(testCase + ",\t" + Constants.TSIM + ",\t" + "Random" + ",\t" + "\n");
-					myWriterPSOserv.write("Test case" + ",\t" + "TSIM" + ",\t" + "Workload" + ",\t" + "\n");
-					myWriterPSOserv.write(testCase + ",\t" + Constants.TSIM + ",\t" + "Random" + ",\t" + "\n");
+					myWriterPSO.write("Test case" + "," + "TSIM" + "," + "Workload" + "," + "\n");
+					myWriterPSO.write(testCase + "," + Constants.TSIM + "," + "Random" + "," + "\n");
+					myWriterPSOserv.write("Test case" + "," + "TSIM" + "," + "Workload" + "," + "\n");
+					myWriterPSOserv.write(testCase + "," + Constants.TSIM + "," + "Random" + "," + "\n");
 
 					for (int t = 1; t <= nTS; t++) {
 						System.out.println("\nts= " + t
@@ -245,15 +245,15 @@ public class MainSim {
 									double t_wait = dv.getStart() - dv.getTimeArrival();
 									double t_proc = dv.getEnd() - dv.getStart();
 									double t_serv = dv.getTimeTrans() + t_wait + t_proc;
-									myWriterPSO.write(r.getId() + ",\t" + dv.getSrcNode().getName() + ",\t"
+									myWriterPSO.write(r.getId() + "," + dv.getSrcNode().getName() + ","
 											+ n.getName()
-											+ ",\t" + dv.getRoute() + ",\t" + dv.getWL() + ",\t" + dv.getRatio() + ",\t"
+											+ "," + dv.getRoute() + "," + dv.getWL() + "," + dv.getRatio() + ","
 											+ dv.getTimeTrans()
-											+ ",\t" + dv.getTimeArrival() + ",\t" + t_wait + ",\t" + dv.getStart()
-											+ ",\t"
-											+ t_proc + ",\t" + dv.getEnd()
-											+ ",\t" + dv.getTimeSer() + ",\t" + t_serv
-											+ ",\t" + "\n");
+											+ "," + dv.getTimeArrival() + "," + t_wait + "," + dv.getStart()
+											+ ","
+											+ t_proc + "," + dv.getEnd()
+											+ "," + dv.getTimeSer() + "," + t_serv
+											+ "," + "\n");
 								}
 							}
 						}
@@ -262,8 +262,9 @@ public class MainSim {
 					double wait = 0;
 					int count = 0;
 
-					myWriterPSOserv.write("\n Vehicle logging\n" + "ID," + "Tser_All(Vehicle)," + "Tser_All(RSU),"
-							+ "Tser_All(CLoud)," + "\n");
+					myWriterPSOserv
+							.write("\n Vehicle logging\n" + "ID," + "Workload," + "Tser_All(PSO)," + "Tser_(Only)"
+									+ "\n");
 					for (RequestBase r : req) {
 						double endM = 0;
 						for (NodeVehicle n : topo) {
@@ -281,10 +282,9 @@ public class MainSim {
 						if (endM < 0) {
 							endM = 0;
 						}
-						myWriterPSOserv.write(+r.getId() + ",\t" + endM + ",\t");
 
 						// endM -= Math.floor(((RequestVehicle) r).getTimeArrival());
-						myWriterPSOserv.write(endM + ",\n");
+						myWriterPSOserv.write(r.getId() + "," + r.getWL() + "," + endM + "," + r.getWL() / 30 + ",\n");
 
 						// System.out.println("AVG: " + wait / count);
 
@@ -308,8 +308,8 @@ public class MainSim {
 				topo_vehicle.write("Name Position Velocity in" + t + "\n");
 				topo_vehicle.write("id,\tname,\tx,\ty,\tvelo,\n");
 				for (NodeVehicle nnn : topo) {
-					topo_vehicle.write(nnn.getId() + ",\t" + nnn.getName() + ",\t" + nnn.getX()[t] + ",\t"
-							+ nnn.getY()[t] + ",\t" + nnn.getVelo()[t] + "\n");
+					topo_vehicle.write(nnn.getId() + "," + nnn.getName() + "," + nnn.getX()[t] + ","
+							+ nnn.getY()[t] + "," + nnn.getVelo()[t] + "\n");
 				}
 				topo_vehicle.close();
 			}
